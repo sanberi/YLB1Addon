@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<forms>
+  <form FormType="139" title="销售报价单"  ></form>
+  <form FormType="149" title="销售订单"  ></form>
+  <form FormType="140" title="销售退货" ></form>
+  <form FormType="180" title="销售交货"  ></form>
+  <form FormType="65308" title="采购订单"  ></form>
+  <form FormType="65300" title="采购退货"  ></form>
+  <form FormType="133" title="收货采购订单"  ></form>
+  <form FormType="60090" title="库存转储"  ></form>
+  <form FormType="179" title="库存收货"  ></form>
+  <form FormType="60091" title="生产收货"  ></form>
+ 
+  
+  <form FormType="142" title="生产订单"  ></form>
+  <form FormType="143" title="生产订单"  ></form>
+  <form FormType="182" title="生产订单" ></form>
+  <form FormType="65309" title="生产订单" ></form>
+  <form FormType="65301" title="生产订单" ></form>
+  <form FormType="141" title="生产订单" ></form>
+  <form FormType="181" title="生产订单" ></form>
+  <form FormType="60092" title="生产订单" ></form>
+  <form FormType="65211" title="生产订单" ></form>
+
+  <form FormType="940" title="生产订单" ></form>
+
+  <form FormType="393" title="生产订单" ></form>
+  <form FormType="392" title="生产订单"  ></form>
+  <form FormType="70001" title="生产订单"  ></form>
+  <form FormType="840" title="生产订单" ></form>
+  <form FormType="906" title="生产订单" ></form>
+  <form FormType="157" title="生产订单" ></form>
+  <form FormType="65201" title="生产订单" ></form>
+  <form FormType="672" title="生产订单" ></form>
+  <form FormType="721" title="生产订单" ></form>
+  <form FormType="720" title="生产订单" ></form>
+  <form FormType="65214" title="生产订单" ></form>
+  <form FormType="65213" title="生产订单" ></form>
+	<form FormType="TI_Z0340" title="采购退货申请单" ></form>
+	<form FormType="TI_Z0360" title="转储申请单" ></form>
+	<form FormType="TI_Z0420" title="库存收货单" ></form>
+	<form FormType="TI_Z0430" title="库存发货单" ></form>
+	<form FormType="TI_Z0800" title="业务伙伴物料单位" ></form>
+	<form FormType="393" title="日记账凭单" ></form>
+  <form FormType="993" title="日记账凭单" ></form>
+	<form FormType="TI_ZKH010" title="导入收款单" ></form>
+</forms>
