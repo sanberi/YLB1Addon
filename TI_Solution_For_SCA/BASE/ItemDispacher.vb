@@ -363,6 +363,10 @@ Friend Class ItemDispacher
                             loobj = New TI_Z0100
                         Case "149"  '
                             loobj = New TI_Z0091
+                        Case "TI_Z0150"  '
+                            loobj = New TI_Z0150
+                        Case "TI_Z0151"  '
+                            loobj = New TI_Z0151
                         Case Else
                             loobj = Nothing
                     End Select
@@ -374,7 +378,7 @@ Friend Class ItemDispacher
                 End If
             Else
                 Select Case pVal.FormTypeEx
-                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "TI_Z0100", "149"
+                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "TI_Z0100", "149"， "TI_Z0151"， "TI_Z0150"
                         loobj = CType(ioFormSL.Item(pVal.FormUID), FormBase)
                     Case Else
                         loobj = Nothing
@@ -505,10 +509,10 @@ Friend Class ItemDispacher
                             Try
                                 Select Case oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Type
                                     Case SAPbouiCOM.BoFormItemTypes.it_EDIT
-                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(iCurrRow).Specific.string = _
+                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(iCurrRow).Specific.string =
                                                     THashTable.Item(i)(ii).ToString
                                     Case SAPbouiCOM.BoFormItemTypes.it_LINKED_BUTTON
-                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(iCurrRow).Specific.string = _
+                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(iCurrRow).Specific.string =
                                                    THashTable.Item(i)(ii).ToString
                                     Case SAPbouiCOM.BoFormItemTypes.it_COMBO_BOX
                                         oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(iCurrRow).Specific.Select(THashTable.Item(i)(ii).ToString)
@@ -604,10 +608,10 @@ Friend Class ItemDispacher
                                     Case SAPbouiCOM.BoFormItemTypes.it_CHECK_BOX
                                         ' oMatrix.Columns.Item("4").Cells.Item(CInt(THashTable.Item(i)(0).ToString)).Specific.checked = True
                                     Case SAPbouiCOM.BoFormItemTypes.it_LINKED_BUTTON
-                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(CInt(THashTable.Item(i)(0).ToString)).Specific.string = _
+                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(CInt(THashTable.Item(i)(0).ToString)).Specific.string =
                                                    THashTable.Item(i)(ii).ToString
                                     Case SAPbouiCOM.BoFormItemTypes.it_EDIT
-                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(CInt(THashTable.Item(i)(0).ToString)).Specific.string = _
+                                        oMatrix.Columns.Item(THashTable.Item(0)(ii).ToString).Cells.Item(CInt(THashTable.Item(i)(0).ToString)).Specific.string =
                                                    THashTable.Item(i)(ii).ToString
                                 End Select
                             Catch ex As Exception
@@ -746,6 +750,8 @@ Friend Class ItemDispacher
                         loForm = BaseFunction.londFromXml("TI_Z0081", TI_SBO_Application)
                     Case "TI_T012" 'MRP计算界面
                         loForm = BaseFunction.londFromXml("TI_Z0100", TI_SBO_Application)
+                    Case "TI_T058" '销售交货向导
+                        loForm = BaseFunction.londFromXml("TI_Z0151", TI_SBO_Application)
                     Case Else
                         If Not TI_SBO_Application.Forms.ActiveForm() Is Nothing Then
                             loForm = TI_SBO_Application.Forms.ActiveForm()
@@ -794,6 +800,10 @@ Friend Class ItemDispacher
                             loobj = New TI_Z0004
                         Case "TI_Z0100"
                             loobj = New TI_Z0100
+                        Case "TI_Z0150"
+                            loobj = New TI_Z0150
+                        Case "TI_Z0151"
+                            loobj = New TI_Z0151
                         Case Else
                             loobj = Nothing
                     End Select
@@ -812,6 +822,10 @@ Friend Class ItemDispacher
                         loobj = New TI_Z0081
                     Case "TI_Z0100"
                         loobj = New TI_Z0100
+                    Case "TI_Z0150"
+                        loobj = New TI_Z0150
+                    Case "TI_Z0151"
+                        loobj = New TI_Z0151
                     Case Else
                         loobj = Nothing
                 End Select
@@ -929,6 +943,10 @@ Friend Class ItemDispacher
                             loobj = New TI_Z0140
                         Case "134"
                             loobj = New TI_Z0004
+                        Case "TI_Z0151"
+                            loobj = New TI_Z0151
+                        Case "TI_Z0150"
+                            loobj = New TI_Z0150
                         Case Else
                             loobj = Nothing
                     End Select
@@ -968,6 +986,10 @@ Friend Class ItemDispacher
                     Case "134"
                         loobj = CType(ioFormSL.Item(FormUID), FormBase)
                     Case "149"
+                        loobj = CType(ioFormSL.Item(FormUID), FormBase)
+                    Case "TI_Z0150"
+                        loobj = CType(ioFormSL.Item(FormUID), FormBase)
+                    Case "TI_Z0151"
                         loobj = CType(ioFormSL.Item(FormUID), FormBase)
                     Case Else
                         loobj = Nothing

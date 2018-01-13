@@ -276,19 +276,28 @@ Public Class BaseFunction
                 oMenuItem = oMenus.Add("TI_T011", "货权转移", SAPbouiCOM.BoMenuType.mt_STRING, 6) '添加一个菜单
                 lbcheck = True
             End If
-            '添加MRP计算界面
-           ' oMenuItem = App.Menus.Item("2304")
-           ' oMenus = oMenuItem.SubMenus()
-           ' If Not (App.Menus.Exists("TI_T088")) Then '如果菜单不存在，就添加菜单
-            '    oMenuItem = oMenus.Add("TI_T088", "MRP计算", SAPbouiCOM.BoMenuType.mt_POPUP, 1) '添加一个菜单
-                '再添加子菜单
-             '   oMenus = oMenuItem.SubMenus
-                '  oMenus.Add("TI_T004", "基础设置", SAPbouiCOM.BoMenuType.mt_STRING, 4001)
-              '  oMenus.Add("TI_T012", "MRP计算", SAPbouiCOM.BoMenuType.mt_STRING, 4002)
-                '   oMenus.Add("TI_T030", "快递单打印快递公司维护", SAPbouiCOM.BoMenuType.mt_STRING, 4001)
 
-               ' lbcheck = True
-           ' End If
+            '添加货权转移界面
+            If Not (App.Menus.Exists("TI_T058")) Then '如果菜单不存在，就添加菜单
+                oMenuItem = App.Menus.Item("2048")
+                oMenus = oMenuItem.SubMenus()
+                oMenuItem = oMenus.Add("TI_T058", "销售交货向导", SAPbouiCOM.BoMenuType.mt_STRING, 6) '添加一个菜单
+                lbcheck = True
+            End If
+
+            '添加MRP计算界面
+            ' oMenuItem = App.Menus.Item("2304")
+            ' oMenus = oMenuItem.SubMenus()
+            ' If Not (App.Menus.Exists("TI_T088")) Then '如果菜单不存在，就添加菜单
+            '    oMenuItem = oMenus.Add("TI_T088", "MRP计算", SAPbouiCOM.BoMenuType.mt_POPUP, 1) '添加一个菜单
+            '再添加子菜单
+            '   oMenus = oMenuItem.SubMenus
+            '  oMenus.Add("TI_T004", "基础设置", SAPbouiCOM.BoMenuType.mt_STRING, 4001)
+            '  oMenus.Add("TI_T012", "MRP计算", SAPbouiCOM.BoMenuType.mt_STRING, 4002)
+            '   oMenus.Add("TI_T030", "快递单打印快递公司维护", SAPbouiCOM.BoMenuType.mt_STRING, 4001)
+
+            ' lbcheck = True
+            ' End If
 
             '‘’‘
             '添加采购负需求菜单
