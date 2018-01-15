@@ -32,7 +32,7 @@ Public NotInheritable Class TI_Z0150
                         Select Case pVal.ItemUID
                             Case "Mtx_10"
                                 If pVal.ColUID = "WhsCode" Then
-                                    Dim lsWhsCode As String
+                                    Dim lsWhsCode, lsItemCode As String
                                     lsWhsCode = lodt.GetValue("WhsCode", 0)
                                     If Not String.IsNullOrEmpty(lsWhsCode) Then
                                         lsWhsCode = lsWhsCode.Trim
@@ -40,7 +40,15 @@ Public NotInheritable Class TI_Z0150
                                     If Not String.IsNullOrEmpty(lsWhsCode) Then
                                         ioDtDoc.Rows.Offset = pVal.Row - 1
                                         ioMtx_10.GetLineData(pVal.Row)
+                                        lsItemCode = ioDtDoc.GetValue("ItemCode", ioDtDoc.Rows.Offset)
                                         ioDtDoc.SetValue("WhsCode", ioDtDoc.Rows.Offset, lsWhsCode)
+
+                                        Dim lsSql As String
+                                        lsSql = "Select t10.OnHand from OITW t10 where t10.ItemCode='" + lsItemCode + "' and t10.WhsCode='" + lsWhsCode + "'"
+                                        ioDtTempSql.ExecuteQuery(lsSql)
+                                        Dim ldOnHand As Double
+                                        Double.TryParse(ioDtTempSql.GetValue("OnHand", 0), ldOnHand)
+                                        ioDtDoc.SetValue("OnHand", ioDtDoc.Rows.Offset, ldOnHand)
                                         ioMtx_10.SetLineData(pVal.Row)
                                         If MyForm.Mode = BoFormMode.fm_OK_MODE Then
                                             MyForm.Mode = BoFormMode.fm_UPDATE_MODE
@@ -138,6 +146,9 @@ Public NotInheritable Class TI_Z0150
                 liRowCount = liRowCount + 1
             End If
         Next i
+        If liRowCount <= 0 Then
+            Return
+        End If
         liRowCountCardCode = loList.Count
         If MyApplication.MessageBox("有" + Convert.ToString(liRowCount） + "行数据即将进行交货，交货客户数:" + Convert.ToString(liRowCountCardCode), 1, "是", "否") <> 1 Then
             Return
@@ -192,6 +203,7 @@ Public NotInheritable Class TI_Z0150
                 Next j
 
                 loDoc15.CardCode = lsCardCode
+                loDoc15.UserFields.Fields.Item("U_ReturnReason").Value = "jacky01"
                 liAddRow = 0
                 loArrayList.Sort()
                 For Each index1 As Integer In loArrayList
