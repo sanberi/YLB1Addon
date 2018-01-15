@@ -751,6 +751,11 @@ Friend Class ItemDispacher
                     Case "TI_T012" 'MRP计算界面
                         loForm = BaseFunction.londFromXml("TI_Z0100", TI_SBO_Application)
                     Case "TI_T058" '销售交货向导
+                        If (TI_Company Is Nothing) Then
+                            TI_SBO_Application.StatusBar.SetText("正在连接SAPDIAPI程序...", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
+                            TI_Company = TI_SBO_Application.Company.GetDICompany()
+                            TI_SBO_Application.StatusBar.SetText("连接SAPDIAPI程序成功!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                        End If
                         loForm = BaseFunction.londFromXml("TI_Z0151", TI_SBO_Application)
                     Case Else
                         If Not TI_SBO_Application.Forms.ActiveForm() Is Nothing Then
@@ -825,7 +830,7 @@ Friend Class ItemDispacher
                     Case "TI_Z0150"
                         loobj = New TI_Z0150
                     Case "TI_Z0151"
-                        loobj = New TI_Z0151
+                        loobj = CType(ioFormSL.Item(FormUID), FormBase)
                     Case Else
                         loobj = Nothing
                 End Select
