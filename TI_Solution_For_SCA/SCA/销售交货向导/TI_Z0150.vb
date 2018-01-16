@@ -203,7 +203,7 @@ Public NotInheritable Class TI_Z0150
                 Next j
 
                 loDoc15.CardCode = lsCardCode
-                loDoc15.UserFields.Fields.Item("U_ReturnReason").Value = "jacky01"
+                loDoc15.UserFields.Fields.Item("U_ReturnReason").Value = "向导创建"
                 liAddRow = 0
                 loArrayList.Sort()
                 For Each index1 As Integer In loArrayList
