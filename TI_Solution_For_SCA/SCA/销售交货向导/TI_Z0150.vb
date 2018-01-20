@@ -112,6 +112,7 @@ Public NotInheritable Class TI_Z0150
     ''' 创建交货单
     ''' </summary>
     Public Sub CreateODLN()
+        MyApplication.StatusBar.SetText("正在收集数据！", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
         ioMtx_10.FlushToDataSource()
         Dim lsSelect, lsCardCode As String
         Dim loList As SortedList = New SortedList()
@@ -149,11 +150,12 @@ Public NotInheritable Class TI_Z0150
         If liRowCount <= 0 Then
             Return
         End If
+        MyApplication.StatusBar.SetText("收集数据成功！", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
         liRowCountCardCode = loList.Count
         If MyApplication.MessageBox("有" + Convert.ToString(liRowCount） + "行数据即将进行交货，交货客户数:" + Convert.ToString(liRowCountCardCode), 1, "是", "否") <> 1 Then
             Return
         End If
-
+        MyApplication.StatusBar.SetText("正在创建销售交货单！", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
         Dim lodt As System.Data.DataTable = New Data.DataTable
         lodt.Columns.Add("ItemCode", GetType(String))
         lodt.Columns.Add("WhsCode", GetType(String))
@@ -203,7 +205,7 @@ Public NotInheritable Class TI_Z0150
                 Next j
 
                 loDoc15.CardCode = lsCardCode
-                loDoc15.UserFields.Fields.Item("U_ReturnReason").Value = "向导创建"
+                loDoc15.UserFields.Fields.Item("U_AgentName").Value = "向导创建"
                 liAddRow = 0
                 loArrayList.Sort()
                 For Each index1 As Integer In loArrayList
@@ -302,7 +304,7 @@ Public NotInheritable Class TI_Z0150
             Next
         End If
 
-
+        MyApplication.StatusBar.SetText("正在创建销售交货单！", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
     End Sub
 
     Public Sub DYBL()
