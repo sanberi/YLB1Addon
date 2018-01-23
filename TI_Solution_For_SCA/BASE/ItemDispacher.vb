@@ -367,6 +367,8 @@ Friend Class ItemDispacher
                             loobj = New TI_Z0150
                         Case "TI_Z0151"  '
                             loobj = New TI_Z0151
+                        Case "TI_Z00071"  '
+                            loobj = New TI_Z00071
                         Case Else
                             loobj = Nothing
                     End Select
@@ -378,7 +380,7 @@ Friend Class ItemDispacher
                 End If
             Else
                 Select Case pVal.FormTypeEx
-                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "TI_Z0100", "149"， "TI_Z0151"， "TI_Z0150"
+                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "TI_Z0100", "149"， "TI_Z0151"， "TI_Z0150", "TI_Z00071"
                         loobj = CType(ioFormSL.Item(pVal.FormUID), FormBase)
                     Case Else
                         loobj = Nothing
@@ -410,7 +412,7 @@ Friend Class ItemDispacher
             '如果是交货单，点击导出交货单，触发事件
             Select Case pVal.EventType
                 Case BoEventTypes.et_FORM_LOAD
-                    Dim a As String = "111"
+
                 Case BoEventTypes.et_ITEM_PRESSED
                     Dim loActForm As Form
                     loActForm = TI_SBO_Application.Forms.ActiveForm()

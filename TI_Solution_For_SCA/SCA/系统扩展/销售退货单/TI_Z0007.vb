@@ -21,6 +21,7 @@ Public NotInheritable Class TI_Z0007
             Case BoEventTypes.et_FORM_LOAD
                 If pVal.BeforeAction Then
                     ioTempSql = MyForm.DataSources.DataTables.Add("TempSql")
+                    ioDbds_ODLN = MyForm.DataSources.DBDataSources.Item("ORDN")
                     '添加打印导出EXCEL的按钮
                     Dim loItem, loItemChoose As Item
                     loItem = MyForm.Items.Add("Export", BoFormItemTypes.it_BUTTON)
@@ -59,8 +60,62 @@ Public NotInheritable Class TI_Z0007
                     If ioTempSql.Rows.Count > 0 Then
                         loCmb_Chooselist.Select("销售退货申请单-仓库", BoSearchKey.psk_ByValue)
                     End If
+
+                    '添加按钮
+                    loBtn_Create1 = MyForm.Items.Item("10000329")
+                    loItem = MyForm.Items.Add("Copy", BoFormItemTypes.it_BUTTON)
+                    loItem.Left = loBtn_Create1.Left
+                    loItem.Width = loBtn_Create1.Width
+                    loItem.Top = loBtn_Create1.Top - loBtn_Create1.Height - 2
+                    loItem.Height = loBtn_Create1.Height
+                    loItem.LinkTo = "10000329"
+                    loBtn_Export = loItem.Specific
+                    loBtn_Export.Caption = "复制从交货单"
                 End If
             Case BoEventTypes.et_ITEM_PRESSED
+                If Not pVal.Before_Action And pVal.ItemUID = "Copy" Then
+                    Dim lsCardCode As String
+                    lsCardCode = ioDbds_ODLN.GetValue("CardCode", 0)
+                    If Not String.IsNullOrEmpty(lsCardCode) Then
+                        lsCardCode = lsCardCode.Trim()
+                    End If
+                    If String.IsNullOrEmpty(lsCardCode) Then
+                        MyApplication.SetStatusBarMessage("请输入客户代码！")
+                        Return
+                    End If
+                    Dim loForm As Form
+                    Dim FileName As String
+                    FileName = "TI_Solution_For_SCA.TI_Z00071.XML"
+                    Dim FileIO As System.IO.Stream
+                    FileIO = BaseFunction.GetEmbeddedResource(FileName) '读取资源文件
+                    Dim sr As New IO.StreamReader(FileIO)
+                    Dim XmlText As String
+                    XmlText = sr.ReadToEnd
+                    Dim XmlDoc As System.Xml.XmlDocument = New Xml.XmlDocument
+                    XmlDoc.LoadXml(XmlText)
+
+                    loForm = BaseFunction.londFromXmlString(XmlDoc.InnerXml, MyApplication)
+
+                    If Not loForm Is Nothing Then
+                        Dim Tag(0) As Object
+                        Tag(0) = MyForm.UniqueID
+                        If Not ItemDispacher.ioFormTag.ContainsKey(loForm.UniqueID) Then
+                            ItemDispacher.ioFormTag.Add(loForm.UniqueID, Tag)
+                        Else
+                            ItemDispacher.ioFormTag.Item(loForm.UniqueID) = Tag
+                        End If
+                        '确认子父窗体关系
+                        If Not ItemDispacher.ioFormSon.ContainsKey(MyForm.UniqueID) Then
+                            ItemDispacher.ioFormSon.Add(MyForm.UniqueID, loForm.UniqueID)
+                        End If
+
+                        Dim loobj As TI_Z00071
+                        loobj = ItemDispacher.ioFormSL.Item(loForm.UniqueID)
+                        loobj.isCardCode = lsCardCode
+                        loobj.isFromUID = pVal.FormUID
+                        loobj.DYBL()
+                    End If
+                End If
                 '按导出EXCEL 时将交货单的数据导出到EXCEL
                 If Not pVal.Before_Action And pVal.ItemUID = "Export" Then
                     'If MyForm.Mode <> BoFormMode.fm_OK_MODE Then
@@ -159,6 +214,7 @@ Public NotInheritable Class TI_Z0007
 
 
                 End If
+
         End Select
     End Sub
 End Class

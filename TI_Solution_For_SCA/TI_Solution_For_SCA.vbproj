@@ -163,6 +163,7 @@
     <Compile Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.vb" />
     <Compile Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="SCA\系统扩展\销售退货单\TI_Z00071.vb" />
     <Compile Include="SCA\销售交货向导\TI_Z0151.vb" />
     <Compile Include="SCA\销售交货向导\TI_Z0150.vb" />
     <Compile Include="SCA\系统扩展\业务伙伴主数据\TI_Z0004.vb" />
@@ -223,6 +224,9 @@
     <Compile Include="BASE\UserLinkButton.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SCA\系统扩展\销售退货单\TI_Z00071.XML">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="SCA\销售交货向导\TI_Z0151.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
