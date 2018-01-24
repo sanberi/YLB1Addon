@@ -13,7 +13,7 @@ Public NotInheritable Class TI_Z00071
     Private ibCheckLoad As Boolean = False
     Private ioListDoc As SortedList = New SortedList
     Public isCardCode, isFromUID As String
-    Private ioUds_SKU, ioUds_ItemName As UserDataSource
+    Private ioUds_SKU, ioUds_ItemName, ioUds_DocDateF, ioUds_DocDateT As UserDataSource
     Public ioNetdt As System.Data.DataTable = New Data.DataTable
 
 
@@ -128,26 +128,25 @@ Public NotInheritable Class TI_Z00071
 
     Public Sub Btn_Select()
         Dim lsSql As String
-        lsSql = "Select  Cast(ROW_NUMBER() OVER(ORDER BY t11.DocDate DESC) as Int) as LineId, "
-        lsSql = lsSql + " t10.DocEntry,t10.LineNum,t10.ItemCode,t12.ItemName,t10.U_OReQty,t10.PriceAfVAT "
-        lsSql = lsSql + " ,round(t10.U_OReQty*t10.PriceAfVAT,2) as LineTotal,t11.Comments,t11.DocDate "
-        lsSql = lsSql + " from DLN1 t10 inner join ODLN t11 on t10.DocEntry=t11.DocEntry inner join OITM t12 on t10.ItemCode=t12.ItemCode "
-        lsSql = lsSql + " where t10.U_OReQty>0 and t11.CardCode='" + isCardCode + "' "
-        Dim lsSKU, lsItemName As String
+        Dim lsSKU, lsItemName, lsDocDateF, lsDocDateT As String
         lsSKU = ioUds_SKU.ValueEx
         If Not String.IsNullOrEmpty(lsSKU) Then
             lsSKU = lsSKU.Trim
-        End If
-        If Not String.IsNullOrEmpty(lsSKU) Then
-            lsSql = lsSql + " and t10.ItemCode  like '%" + lsSKU + "%' "
         End If
         lsItemName = ioUds_ItemName.ValueEx
         If Not String.IsNullOrEmpty(lsItemName) Then
             lsItemName = lsItemName.Trim
         End If
-        If Not String.IsNullOrEmpty(lsItemName) Then
-            lsSql = lsSql + " and t12.ItemName like '%" + lsItemName + "%' "
+        lsDocDateF = ioUds_DocDateF.ValueEx
+        If Not String.IsNullOrEmpty(lsDocDateF) Then
+            lsDocDateF = lsDocDateF.Trim
         End If
+        lsDocDateT = ioUds_DocDateT.ValueEx
+        If Not String.IsNullOrEmpty(lsDocDateT) Then
+            lsDocDateT = lsDocDateT.Trim
+        End If
+
+        lsSql = "exec ORDNNotBaseODLN '" + isCardCode + "','" + lsSKU + "','" + lsItemName + "','" + lsDocDateF + "','" + lsDocDateT + "'"
 
         ioDtTempSql.ExecuteQuery(lsSql)
         ioDtDoc.Rows.Clear()
@@ -200,6 +199,10 @@ Public NotInheritable Class TI_Z00071
 
         ioUds_SKU = MyForm.DataSources.UserDataSources.Item("SKU")
         ioUds_ItemName = MyForm.DataSources.UserDataSources.Item("ItemName")
+        ioUds_DocDateF = MyForm.DataSources.UserDataSources.Item("DocDateF")
+        ioUds_DocDateT = MyForm.DataSources.UserDataSources.Item("DocDateT")
+        ioUds_DocDateF.ValueEx = Today.AddMonths(-3).ToString("yyyyMMdd")
+        ioUds_DocDateT.ValueEx = Today.ToString("yyyyMMdd")
 
         ioNetdt.Columns.Add("DocEntry", GetType(Integer))
         ioNetdt.Columns.Add("LineNum", GetType(Integer))

@@ -70,7 +70,7 @@ Public NotInheritable Class TI_Z0007
                     loItem.Height = loBtn_Create1.Height
                     loItem.LinkTo = "10000329"
                     loBtn_Export = loItem.Specific
-                    loBtn_Export.Caption = "复制从交货单"
+                    loBtn_Export.Caption = "复制从已清交货单"
                 End If
             Case BoEventTypes.et_ITEM_PRESSED
                 If Not pVal.Before_Action And pVal.ItemUID = "Copy" Then
