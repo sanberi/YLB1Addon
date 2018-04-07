@@ -204,9 +204,18 @@ Public NotInheritable Class TI_Z000A
                                         If (loWebAPIResponse.Status <> 200) Then
                                             MyApplication.SetStatusBarMessage("审批触发异常(远程),错误信息:" + loWebAPIResponse.Message)
                                         Else
-                                            MyApplication.StatusBar.SetText("审批触发成功,审批单号:" + loWebAPIResponse.Content.DocEntry.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
-                                            '通过单号请求审批信息
-
+                                            Dim liAppEntry As Long
+                                            liAppEntry = loWebAPIResponse.Content.DocEntry
+                                            If liAppEntry > 0 Then
+                                                MyApplication.StatusBar.SetText("审批触发成功,审批单号:" + liAppEntry.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                                                '通过单号请求审批信息
+                                                Try
+                                                    lsSql = "Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select " + liAppEntry.ToString() + ",'OMS0001'," + liBaseKey.ToString() + ",GETDATE(),'N','O','SP0001'"
+                                                    ioTempSql.ExecuteQuery(lsSql)
+                                                Catch ex As Exception
+                                                    MyApplication.SetStatusBarMessage("插入审批表异常，请联系IT部,错误信息:" + ex.Message.ToString())
+                                                End Try
+                                            End If
                                         End If
                                     Catch ex As Exception
                                         MyApplication.SetStatusBarMessage("审批触发异常(本地),错误信息:" + ex.Message.ToString())
