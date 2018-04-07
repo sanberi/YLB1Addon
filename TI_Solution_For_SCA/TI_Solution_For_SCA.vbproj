@@ -131,6 +131,10 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -163,6 +167,14 @@
     <Compile Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.vb" />
     <Compile Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\MDM007606Request.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\MDM007606Response.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\MDM007607Request.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\MDM007607Response.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\WebAPIRequest.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\WebAPIRequestBase.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\WebAPIResponse.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\approve\WebAPIResponseBase.vb" />
     <Compile Include="SCA\系统扩展\销售退货单\TI_Z00071.vb" />
     <Compile Include="SCA\销售交货向导\TI_Z0151.vb" />
     <Compile Include="SCA\销售交货向导\TI_Z0150.vb" />
@@ -274,6 +286,7 @@
     <EmbeddedResource Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BASE\XML\QX.XML">

@@ -1,5 +1,8 @@
 ﻿Option Strict Off
 Option Explicit On
+Imports System.IO
+Imports System.Net
+Imports System.Text
 Imports SAPbouiCOM
 
 Public Class BaseFunction
@@ -14,6 +17,8 @@ Public Class BaseFunction
     Public Shared ioVVSXML As Xml.XmlDocument = New Xml.XmlDocument
     Public Shared iiSumDec, iiPriceDec, iiRateDec, iiQtyDec, iiPercentDec, iiMeasureDec As Integer
     Public Shared isPoFromType As String
+    Public Shared isURL As String = "http://117.149.160.231:8880"
+
     '   Public Shared isOINVFromType As String
     'UI初始化
     Public Shared Function GSub_UI_AppConnect(ByRef PObj_UI_App As SAPbouiCOM.Application) As Boolean
@@ -1021,5 +1026,36 @@ Public Class BaseFunction
     End Function
 
 
+    Public Shared Function PostMoths(ByVal url As String, ByVal param As String) As String
+        Try
+            Dim strURL As String = url
+            Dim request As System.Net.HttpWebRequest
+            request = CType(WebRequest.Create(strURL), System.Net.HttpWebRequest)
+            request.Method = "POST"
+            request.ContentType = "application/json;charset=UTF-8"
+            Dim paraUrlCoded As String = param
+            Dim payload() As Byte
+            payload = System.Text.Encoding.UTF8.GetBytes(paraUrlCoded)
+            request.ContentLength = payload.Length
+            Dim writer As Stream = request.GetRequestStream()
+            writer.Write(payload, 0, payload.Length)
+            writer.Close()
+            Dim response As System.Net.HttpWebResponse
+            response = CType(request.GetResponse(), System.Net.HttpWebResponse)
+            Dim s As System.IO.Stream
+            s = response.GetResponseStream()
+            Dim StrDate As String = ""
+            Dim strValue As String = ""
+            Dim Reader As StreamReader = New StreamReader(s, Encoding.UTF8)
+            StrDate = Reader.ReadLine()
+            While Not String.IsNullOrEmpty(StrDate)
+                strValue += StrDate + vbNewLine
+                StrDate = Reader.ReadLine()
+            End While
+            Return strValue
+        Catch ex As Exception
+            Return ex.Message
+        End Try
 
+    End Function
 End Class
