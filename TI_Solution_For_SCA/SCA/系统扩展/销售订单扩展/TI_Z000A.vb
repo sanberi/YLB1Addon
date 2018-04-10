@@ -196,9 +196,10 @@ Public NotInheritable Class TI_Z000A
                                     loWebAPIRequest.Content.InputJson = ""
                                     loWebAPIRequest.Content.BaseType = "OMS0001"
                                     loWebAPIRequest.Content.BaseKey = liBaseKey
-                                    loWebAPIRequest.Content.UserCode = lsSalerCode
-                                    'loWebAPIRequest.Content.UserCode = "P0014"
-                                    loWebAPIRequest.UserCode = lsSalerCode
+                                    'loWebAPIRequest.Content.UserCode = lsSalerCode
+                                    'loWebAPIRequest.UserCode = lsSalerCode
+                                    loWebAPIRequest.Content.UserCode = "P0014"
+                                    loWebAPIRequest.UserCode = "P0014"
                                     lsstring = Newtonsoft.Json.JsonConvert.SerializeObject(loWebAPIRequest)
                                     Try
                                         Dim lsRString As String = BaseFunction.PostMoths(BaseFunction.isURL + "/MDM0076/MDM007606", lsstring)
