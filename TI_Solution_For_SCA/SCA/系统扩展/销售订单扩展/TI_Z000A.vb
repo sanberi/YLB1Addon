@@ -226,6 +226,8 @@ Public NotInheritable Class TI_Z000A
                                 End If
                             End If
                         End If
+                    Else
+                        MyApplication.SetStatusBarMessage("请先添加或者更新单据！")
                     End If
                 End If
             Case BoEventTypes.et_DOUBLE_CLICK
