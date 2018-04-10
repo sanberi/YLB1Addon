@@ -17,7 +17,7 @@ Public Class BaseFunction
     Public Shared ioVVSXML As Xml.XmlDocument = New Xml.XmlDocument
     Public Shared iiSumDec, iiPriceDec, iiRateDec, iiQtyDec, iiPercentDec, iiMeasureDec As Integer
     Public Shared isPoFromType As String
-    Public Shared isURL As String = "http://117.149.160.231:8880"
+    Public Shared isURL As String = "http://api.mdm.ylscm.com"
 
     '   Public Shared isOINVFromType As String
     'UI初始化
