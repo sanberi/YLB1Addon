@@ -163,6 +163,7 @@
     <Compile Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.vb" />
     <Compile Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="SCA\系统扩展\收货草稿单扩展\TI_Z000D.vb" />
     <Compile Include="SCA\系统扩展\销售退货单\TI_Z00071.vb" />
     <Compile Include="SCA\销售交货向导\TI_Z0151.vb" />
     <Compile Include="SCA\销售交货向导\TI_Z0150.vb" />
