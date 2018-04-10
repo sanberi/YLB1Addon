@@ -80,7 +80,7 @@ Public NotInheritable Class TI_Z00071
             Dim loNetNewRow As Data.DataRow
             Dim lsSKU As String
             Dim liDocEntry, liLineNum As Integer
-            Dim ldQty As Double
+            Dim ldQty, ldPriceAfVat As Double
             For i As Integer = 0 To ioDtDoc.Rows.Count - 1
                 lsSelect = ioDtDoc.GetValue("U_Select", i)
                 If Not String.IsNullOrEmpty(lsSelect) Then
@@ -91,12 +91,14 @@ Public NotInheritable Class TI_Z00071
                     liDocEntry = ioDtDoc.GetValue("DocEntry", i)
                     liLineNum = ioDtDoc.GetValue("LineNum", i)
                     ldQty = ioDtDoc.GetValue("Qty", i)
+                    ldPriceAfVat = ioDtDoc.GetValue("PriceAfVAT", i)
 
                     loNetNewRow = ioNetdt.NewRow
                     loNetNewRow("ItemCode") = lsSKU
                     loNetNewRow("DocEntry") = liDocEntry
                     loNetNewRow("LineNum") = liLineNum
                     loNetNewRow("Qty") = ldQty
+                    loNetNewRow("PriceAfVAT") = ldPriceAfVat
                     'loMtx.Columns.Item("1").Cells.Item(liMtxRowcount).Specific.Value = lsSKU
 
                     ioNetdt.Rows.Add(loNetNewRow)
@@ -111,9 +113,11 @@ Public NotInheritable Class TI_Z00071
                     liDocEntry = loRow1("DocEntry")
                     liLineNum = loRow1("LineNum")
                     ldQty = loRow1("Qty")
+                    ldPriceAfVat = loRow1("PriceAfVAT")
 
                     loMtx.Columns.Item("1").Cells.Item(liMtxRowcount).Specific.Value = lsSKU
                     loMtx.Columns.Item("11").Cells.Item(liMtxRowcount).Specific.Value = ldQty
+                    loMtx.Columns.Item("20").Cells.Item(liMtxRowcount).Specific.Value = ldPriceAfVat
                     loMtx.Columns.Item("U_DNEntry").Cells.Item(liMtxRowcount).Specific.Value = Convert.ToString(liDocEntry)
                     loMtx.Columns.Item("U_DNLine").Cells.Item(liMtxRowcount).Specific.Value = Convert.ToString(liLineNum)
 
@@ -209,5 +213,6 @@ Public NotInheritable Class TI_Z00071
 
         ioNetdt.Columns.Add("ItemCode", GetType(String))
         ioNetdt.Columns.Add("Qty", GetType(Double))
+        ioNetdt.Columns.Add("PriceAfVAT", GetType(Double))
     End Sub
 End Class

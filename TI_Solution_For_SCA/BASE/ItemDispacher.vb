@@ -169,6 +169,8 @@ Friend Class ItemDispacher
                             loobj = New TI_Z0100
                         Case "149"  'MRP计算界面
                             loobj = New TI_Z0091
+                        Case "143"  '收货采购订单草稿界面
+                            loobj = New TI_Z000D
                         Case Else
                             loobj = Nothing
                     End Select
@@ -204,6 +206,8 @@ Friend Class ItemDispacher
                             loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
                         Case "149"
                             loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
+                        Case "143"  '收货采购订单草稿界面
+                            loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
                         Case Else
                             loobj = Nothing
                     End Select
@@ -235,6 +239,8 @@ Friend Class ItemDispacher
                     Case "TI_Z0100"
                         loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
                     Case "149"
+                        loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
+                    Case "143"  '收货采购订单草稿界面
                         loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
                     Case Else
                         loobj = Nothing
@@ -369,6 +375,8 @@ Friend Class ItemDispacher
                             loobj = New TI_Z0151
                         Case "TI_Z00071"  '
                             loobj = New TI_Z00071
+                        Case "143"  '
+                            loobj = New TI_Z000D
                         Case Else
                             loobj = Nothing
                     End Select
@@ -380,7 +388,7 @@ Friend Class ItemDispacher
                 End If
             Else
                 Select Case pVal.FormTypeEx
-                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "TI_Z0100", "149"， "TI_Z0151"， "TI_Z0150", "TI_Z00071"
+                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "TI_Z0100", "149"， "TI_Z0151"， "TI_Z0150", "TI_Z00071", "143"
                         loobj = CType(ioFormSL.Item(pVal.FormUID), FormBase)
                     Case Else
                         loobj = Nothing

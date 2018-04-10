@@ -318,6 +318,12 @@ Public NotInheritable Class TI_Z0008
                 loDoc.Lines.WarehouseCode = "W006"
                 loDoc.Lines.Quantity = ldQty
                 loDoc.Lines.AccountCode = "141011"
+
+                loDoc.Lines.LineTotal = 0
+                loDoc.Lines.Price = 0
+                loDoc.Lines.UnitPrice = 0
+
+                ' loDoc.Lines.StockInmPrice = 0
                 loDoc.Lines.UserFields.Fields.Item("U_OrderPrice").Value = ldPrice
                 loDoc.Lines.UserFields.Fields.Item("U_AgentBaseEntry").Value = lsBaseEntry
                 loDoc.Lines.UserFields.Fields.Item("U_AgentBaseLine").Value = lsBaseLine
@@ -328,6 +334,7 @@ Public NotInheritable Class TI_Z0008
                 loDoc.Lines.BatchNumbers.Location = lsLocation.Trim
                 liOIGELine = liOIGELine + 1
             Next
+            '  Dim price As Decimal = loDoc.Lines.Price
             loDoc.UserFields.Fields.Item("U_AgentName").Value = lsCardName.Trim
             loDoc.Reference2 = "代销退回"
             Dim lsErrorOIGE As String
