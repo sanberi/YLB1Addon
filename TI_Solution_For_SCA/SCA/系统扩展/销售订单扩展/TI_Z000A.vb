@@ -26,6 +26,7 @@ Public NotInheritable Class TI_Z000A
             Case BoEventTypes.et_FORM_LOAD
                 If pVal.BeforeAction Then
                     ioTempSql = MyForm.DataSources.DataTables.Add("TempSql")
+                    ioDbds_ODLN = MyForm.DataSources.DBDataSources.Item("ORDR")
                     '添加打印导出EXCEL的按钮
                     Dim loItem, loItemChoose As Item
                     loItem = MyForm.Items.Add("Export", BoFormItemTypes.it_BUTTON)
@@ -62,6 +63,18 @@ Public NotInheritable Class TI_Z000A
                         loCmb_Chooselist.ValidValues.Add(lsTempName, lsTempName)
                     Next
                     loCmb_Chooselist.Select("销售合同", BoSearchKey.psk_ByValue)
+
+                    loBtn_Create1 = MyForm.Items.Item("10000329")
+                    loItemChoose = MyForm.Items.Add("approve", BoFormItemTypes.it_BUTTON)
+                    Dim loBtn_approve As SAPbouiCOM.Button
+                    loItemChoose.Left = loBtn_Create1.Left
+                    loItemChoose.Width = loBtn_Create1.Width
+                    loItemChoose.Top = loBtn_Create1.Top - loBtn_Create1.Height - 5
+                    loItemChoose.Height = loBtn_Create1.Height
+                    loItemChoose.AffectsFormMode = False
+                    loItemChoose.LinkTo = "10000329"
+                    loBtn_approve = loItemChoose.Specific
+                    loBtn_approve.Caption = "触发审批"
                 End If
             Case BoEventTypes.et_ITEM_PRESSED
                 If Not pVal.Before_Action And pVal.ItemUID = "Export" Then
@@ -102,61 +115,116 @@ Public NotInheritable Class TI_Z000A
 
                     '打开Excel
                     Dim oExcelApp As Microsoft.Office.Interop.Excel.Application
-                        oExcelApp = New Microsoft.Office.Interop.Excel.Application
-                        Dim hwnd As Integer = CInt(oExcelApp.Hwnd)
-                        Dim processid As Integer
-                        GetWindowThreadProcessId(hwnd, processid)
+                    oExcelApp = New Microsoft.Office.Interop.Excel.Application
+                    Dim hwnd As Integer = CInt(oExcelApp.Hwnd)
+                    Dim processid As Integer
+                    GetWindowThreadProcessId(hwnd, processid)
 
-                        Dim m_objBooks As Microsoft.Office.Interop.Excel.Workbooks
-                        Dim m_objBook As Microsoft.Office.Interop.Excel.Workbook
-                        Dim m_objSheets As Microsoft.Office.Interop.Excel.Sheets
-                        Dim m_objSheet As Microsoft.Office.Interop.Excel.Worksheet
+                    Dim m_objBooks As Microsoft.Office.Interop.Excel.Workbooks
+                    Dim m_objBook As Microsoft.Office.Interop.Excel.Workbook
+                    Dim m_objSheets As Microsoft.Office.Interop.Excel.Sheets
+                    Dim m_objSheet As Microsoft.Office.Interop.Excel.Worksheet
 
-                        '  File.Copy(lsSourcePath, lsTargetFile, True)
+                    '  File.Copy(lsSourcePath, lsTargetFile, True)
 
-                        oExcelApp.Visible = True
-                        oExcelApp.DisplayAlerts = False
-                        m_objBooks = oExcelApp.Workbooks
-                        m_objBook = m_objBooks.Open(lsTargetFile)
+                    oExcelApp.Visible = True
+                    oExcelApp.DisplayAlerts = False
+                    m_objBooks = oExcelApp.Workbooks
+                    m_objBook = m_objBooks.Open(lsTargetFile)
 
-                        m_objSheets = m_objBook.Worksheets
-                        m_objSheet = m_objSheets.Item(1) '定位第一张表
-                        m_objSheet.Activate()
+                    m_objSheets = m_objBook.Worksheets
+                    m_objSheet = m_objSheets.Item(1) '定位第一张表
+                    m_objSheet.Activate()
 
-                        '设置打印机，纸张
-                        '检查打印机是否正确
-                        Dim doc As System.Drawing.Printing.PrintDocument = New System.Drawing.Printing.PrintDocument()
-                        doc.PrinterSettings.PrinterName = lsU_Printer
-                        Dim lsFlag As String = "2"
-                        If Not doc.PrinterSettings.IsValid Then
-                            lsFlag = "1"
-                        End If
-                        doc = Nothing
-                        GC.Collect()
-                        '打印
-                        Try
-                            oExcelApp.Run("Sheet1.FindPrinter", lsU_Printer, lsU_PsizeID, lsFlag)
-                            oExcelApp.ScreenUpdating = False
-                            oExcelApp.Run("GetDataString", Convert.ToString(liDocEntry))
-                            oExcelApp.ScreenUpdating = True
-                            m_objSheet.PrintOutEx()
-
-                        Catch ex As Exception
-                            MyApplication.SetStatusBarMessage(ex.ToString())
-                            BubbleEvent = False
-                            '   File.Delete(lsTargetFile)
-                            ' Return
-                        Finally
-                            m_objBook.Close()
-                            Dim deadProcess As Process = Process.GetProcessById(processid)  '获取该进程
-                            oExcelApp.Quit()
-                            System.Runtime.InteropServices.Marshal.ReleaseComObject(oExcelApp)
-                            oExcelApp = Nothing
-                            GC.Collect()
-                            deadProcess.Kill()  '杀死进程
-                        End Try
-
+                    '设置打印机，纸张
+                    '检查打印机是否正确
+                    Dim doc As System.Drawing.Printing.PrintDocument = New System.Drawing.Printing.PrintDocument()
+                    doc.PrinterSettings.PrinterName = lsU_Printer
+                    Dim lsFlag As String = "2"
+                    If Not doc.PrinterSettings.IsValid Then
+                        lsFlag = "1"
                     End If
+                    doc = Nothing
+                    GC.Collect()
+                    '打印
+                    Try
+                        oExcelApp.Run("Sheet1.FindPrinter", lsU_Printer, lsU_PsizeID, lsFlag)
+                        oExcelApp.ScreenUpdating = False
+                        oExcelApp.Run("GetDataString", Convert.ToString(liDocEntry))
+                        oExcelApp.ScreenUpdating = True
+                        m_objSheet.PrintOutEx()
+
+                    Catch ex As Exception
+                        MyApplication.SetStatusBarMessage(ex.ToString())
+                        BubbleEvent = False
+                        '   File.Delete(lsTargetFile)
+                        ' Return
+                    Finally
+                        m_objBook.Close()
+                        Dim deadProcess As Process = Process.GetProcessById(processid)  '获取该进程
+                        oExcelApp.Quit()
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(oExcelApp)
+                        oExcelApp = Nothing
+                        GC.Collect()
+                        deadProcess.Kill()  '杀死进程
+                    End Try
+                ElseIf Not pVal.Before_Action And pVal.ItemUID = "approve" Then
+                    '触发审批
+                    If MyForm.Mode = BoFormMode.fm_OK_MODE Then
+                        Dim liBaseKey As Integer
+                        liBaseKey = ioDbds_ODLN.GetValue("DocEntry", 0)
+                        If liBaseKey > 0 Then
+                            Dim lsCardCode As String = ioDbds_ODLN.GetValue("CardCode", 0)
+                            If Not String.IsNullOrEmpty(lsCardCode) Then
+                                lsCardCode = lsCardCode.Trim
+                            End If
+                            If Not String.IsNullOrEmpty(lsCardCode) Then
+                                Dim lsSql As String
+                                lsSql = "Select t11.SalerCode from OCRD t10 inner join RW0001 t11 on t10.CardCode='" + lsCardCode + "' and t10.U_Saler=t11.SalerName"
+                                ioTempSql.ExecuteQuery(lsSql)
+                                Dim lsSalerCode As String
+                                lsSalerCode = ioTempSql.GetValue(0, 0)
+                                If Not String.IsNullOrEmpty(lsSalerCode) Then
+                                    lsSalerCode = lsSalerCode.Trim
+                                End If
+                                If Not String.IsNullOrEmpty(lsSalerCode) Then
+                                    Dim lsstring As String
+                                    Dim loWebAPIRequest As WebAPIRequest(Of MDM007606Request) = New WebAPIRequest(Of MDM007606Request)
+                                    loWebAPIRequest.Content = New MDM007606Request()
+                                    loWebAPIRequest.Content.Code = "SP0001"
+                                    loWebAPIRequest.Content.IsDesignated = "N"
+                                    loWebAPIRequest.Content.InputJson = ""
+                                    loWebAPIRequest.Content.BaseType = "OMS0001"
+                                    loWebAPIRequest.Content.BaseKey = liBaseKey
+                                    loWebAPIRequest.Content.UserCode = lsSalerCode
+                                    lsstring = Newtonsoft.Json.JsonConvert.SerializeObject(loWebAPIRequest)
+                                    Try
+                                        Dim lsRString As String = BaseFunction.PostMoths(BaseFunction.isURL + "/MDM0076/MDM007606", lsstring)
+                                        Dim loWebAPIResponse As WebAPIResponse(Of MDM007606Response) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of WebAPIResponse(Of MDM007606Response))(lsRString)
+                                        If (loWebAPIResponse.Status <> 200) Then
+                                            MyApplication.SetStatusBarMessage("审批触发异常(远程),错误信息:" + loWebAPIResponse.Message)
+                                        Else
+                                            Dim liAppEntry As Long
+                                            liAppEntry = loWebAPIResponse.Content.DocEntry
+                                            If liAppEntry > 0 Then
+                                                MyApplication.StatusBar.SetText("审批触发成功,审批单号:" + liAppEntry.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                                                '通过单号请求审批信息
+                                                Try
+                                                    lsSql = "Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select " + liAppEntry.ToString() + ",'OMS0001'," + liBaseKey.ToString() + ",GETDATE(),'N','O','SP0001'"
+                                                    ioTempSql.ExecuteQuery(lsSql)
+                                                Catch ex As Exception
+                                                    MyApplication.SetStatusBarMessage("插入审批表异常，请联系IT部,错误信息:" + ex.Message.ToString())
+                                                End Try
+                                            End If
+                                        End If
+                                    Catch ex As Exception
+                                        MyApplication.SetStatusBarMessage("审批触发异常(本地),错误信息:" + ex.Message.ToString())
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
             Case BoEventTypes.et_DOUBLE_CLICK
                 If Not pVal.Before_Action And pVal.ItemUID = "38" Then
                     If pVal.ColUID = "1" Then
