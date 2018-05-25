@@ -71,8 +71,26 @@ Public NotInheritable Class TI_Z0007
                     loItem.LinkTo = "10000329"
                     loBtn_Export = loItem.Specific
                     loBtn_Export.Caption = "复制从已清交货单"
+
+
+                    loBtn_Create1 = MyForm.Items.Item("10000330")
+                    loItem = MyForm.Items.Add("approve", BoFormItemTypes.it_BUTTON)
+                    loItem.Left = loBtn_Create1.Left
+                    loItem.Width = loBtn_Create1.Width
+                    loItem.Top = loBtn_Create1.Top - loBtn_Create1.Height - 2
+                    loItem.Height = loBtn_Create1.Height
+                    loItem.LinkTo = "10000330"
+                    loBtn_Export = loItem.Specific
+                    loBtn_Export.Caption = "非标品审批"
                 End If
             Case BoEventTypes.et_ITEM_PRESSED
+                If Not pVal.Before_Action And pVal.ItemUID = "approve" Then
+                    Dim liDocEntry As Integer
+                    Integer.TryParse(ioDbds_ODLN.GetValue("DocEntry", 0), liDocEntry)
+                    If liDocEntry > 0 Then
+                        approve(liDocEntry)
+                    End If
+                End If
                 If Not pVal.Before_Action And pVal.ItemUID = "Copy" Then
                     Dim lsCardCode As String
                     lsCardCode = ioDbds_ODLN.GetValue("CardCode", 0)
@@ -116,6 +134,7 @@ Public NotInheritable Class TI_Z0007
                         loobj.DYBL()
                     End If
                 End If
+
                 '按导出EXCEL 时将交货单的数据导出到EXCEL
                 If Not pVal.Before_Action And pVal.ItemUID = "Export" Then
                     'If MyForm.Mode <> BoFormMode.fm_OK_MODE Then
@@ -214,6 +233,98 @@ Public NotInheritable Class TI_Z0007
 
 
                 End If
+
+        End Select
+    End Sub
+
+    ''' <summary>
+    ''' 触发审批
+    ''' </summary>
+    ''' <param name="liDocEntry"></param>
+    Private Sub approve(liDocEntry As Integer)
+        Dim lsSql As String
+        lsSql = "Select t10.CardCode from ODRF t10 where t10.DocEntry=" + Convert.ToString(liDocEntry) + " and ObjType='16'"
+        ioTempSql.ExecuteQuery(lsSql)
+        Dim lsCardCode As String = ioTempSql.GetValue("CardCode", 0)
+        If Not String.IsNullOrEmpty(lsCardCode) Then
+            lsCardCode = lsCardCode.Trim
+        End If
+        If Not String.IsNullOrEmpty(lsCardCode) Then
+            '是否需要审批
+            lsSql = "select 'A' ItemCode from ODRF t1  inner join DRF1 t2 on t2.DocEntry=t1.DocEntry inner join OITM t3 on t2.ItemCode=t3.ItemCode where t1.objtype='16'  and DocStatus='O' and t3.u_ItemLevel='非标件' and t1.DocEntry='" + Convert.ToString(liDocEntry) + "'"
+            ioTempSql.ExecuteQuery(lsSql)
+            Dim lsItemCode As String
+            lsItemCode = ioTempSql.GetValue("ItemCode", 0)
+            If Not String.IsNullOrEmpty(lsItemCode) Then
+                lsItemCode = lsItemCode.Trim
+            End If
+            If Not String.IsNullOrEmpty(lsItemCode) Then
+                lsSql = "Select t11.SalerCode from OCRD t10 inner join RW0001 t11 on t10.CardCode='" + lsCardCode + "' and t10.U_Saler=t11.SalerName"
+                ioTempSql.ExecuteQuery(lsSql)
+                Dim lsSalerCode As String
+                lsSalerCode = ioTempSql.GetValue(0, 0)
+                If Not String.IsNullOrEmpty(lsSalerCode) Then
+                    lsSalerCode = lsSalerCode.Trim
+                End If
+                If Not String.IsNullOrEmpty(lsSalerCode) Then
+                    Dim lsstring As String
+                    Dim loWebAPIRequest As WebAPIRequest(Of MDM007606Request) = New WebAPIRequest(Of MDM007606Request)
+                    loWebAPIRequest.Content = New MDM007606Request()
+                    loWebAPIRequest.Content.Code = "SP0002"
+                    loWebAPIRequest.Content.IsDesignated = "N"
+                    loWebAPIRequest.Content.InputJson = ""
+                    loWebAPIRequest.Content.BaseType = "OMS0023"
+                    loWebAPIRequest.Content.BaseKey = liDocEntry
+                    loWebAPIRequest.Content.UserCode = lsSalerCode
+                    loWebAPIRequest.UserCode = lsSalerCode
+                    'loWebAPIRequest.Content.UserCode = "P0014"
+                    'loWebAPIRequest.UserCode = "P0014"
+                    lsstring = Newtonsoft.Json.JsonConvert.SerializeObject(loWebAPIRequest)
+                    Try
+                        Dim lsRString As String = BaseFunction.PostMoths(BaseFunction.isURL + "/MDM0076/MDM007606", lsstring)
+                        Dim loWebAPIResponse As WebAPIResponse(Of MDM007606Response) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of WebAPIResponse(Of MDM007606Response))(lsRString)
+                        If (loWebAPIResponse.Status <> 200) Then
+                            MyApplication.SetStatusBarMessage("审批触发异常(远程),请手动触发审批,错误信息:" + loWebAPIResponse.Message)
+                        Else
+                            Dim liAppEntry As Long
+                            liAppEntry = loWebAPIResponse.Content.DocEntry
+                            If liAppEntry > 0 Then
+                                MyApplication.StatusBar.SetText("审批触发成功,审批单号:" + liAppEntry.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                                '通过单号请求审批信息
+                                Try
+                                    lsSql = "Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select " + liAppEntry.ToString() + ",'OMS0023'," + liDocEntry.ToString() + ",GETDATE(),'N','O','SP0002'"
+                                    ioTempSql.ExecuteQuery(lsSql)
+                                Catch ex As Exception
+                                    MyApplication.SetStatusBarMessage("插入审批表异常，请联系IT部,错误信息:" + ex.Message.ToString())
+                                End Try
+                            End If
+                        End If
+                    Catch ex As Exception
+                        MyApplication.SetStatusBarMessage("审批触发异常(本地),错误信息:" + ex.Message.ToString() + "请联系IT部")
+                    End Try
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub TI_Z0007_FormDataEvent(ByRef BusinessObjectInfo As BusinessObjectInfo, ByRef BubbleEvent As Boolean) Handles Me.FormDataEvent
+        Select Case BusinessObjectInfo.EventType
+            Case BoEventTypes.et_FORM_DATA_ADD
+                If Not BusinessObjectInfo.BeforeAction Then
+                    Dim lsObjType As String = BusinessObjectInfo.Type
+                    If lsObjType = "112" Then
+                        Dim liDocEntry As Integer
+                        'Integer.TryParse(BusinessObjectInfo.ObjectKey, liDocEntry)
+                        Dim XmlDoc As System.Xml.XmlDocument = New Xml.XmlDocument
+                        XmlDoc.LoadXml(BusinessObjectInfo.ObjectKey)
+                        Dim XmlNode As Xml.XmlNode = XmlDoc.SelectSingleNode("/DocumentParams/DocEntry")
+                        Integer.TryParse(XmlNode.FirstChild.Value, liDocEntry)
+                        If liDocEntry > 0 Then
+                            approve(liDocEntry)
+                        End If
+                    End If
+                End If
+            Case BoEventTypes.et_FORM_DATA_UPDATE
 
         End Select
     End Sub
