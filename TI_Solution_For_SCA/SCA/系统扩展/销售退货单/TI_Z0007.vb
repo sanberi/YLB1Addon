@@ -251,7 +251,7 @@ Public NotInheritable Class TI_Z0007
         End If
         If Not String.IsNullOrEmpty(lsCardCode) Then
             '是否需要审批
-            lsSql = "select 'A' ItemCode from ODRF t1  inner join DRF1 t2 on t2.DocEntry=t1.DocEntry inner join OITM t3 on t2.ItemCode=t3.ItemCode where t1.objtype='16'  and DocStatus='O' and t3.u_ItemLevel='非标件' and t1.DocEntry='" + Convert.ToString(liDocEntry) + "'"
+            lsSql = "select 'A' ItemCode from ODRF t1  inner join DRF1 t2 on t2.DocEntry=t1.DocEntry inner join OITM t3 on t2.ItemCode=t3.ItemCode where t1.objtype='16'  and DocStatus='O' and isnull(T1.U_ItemDel,'Y')='Y' and isnull(t3.u_ItemLevel,' ')<>'标准件' and t1.DocEntry='" + Convert.ToString(liDocEntry) + "'"
             ioTempSql.ExecuteQuery(lsSql)
             Dim lsItemCode As String
             lsItemCode = ioTempSql.GetValue("ItemCode", 0)
@@ -302,7 +302,11 @@ Public NotInheritable Class TI_Z0007
                     Catch ex As Exception
                         MyApplication.SetStatusBarMessage("审批触发异常(本地),错误信息:" + ex.Message.ToString() + "请联系IT部")
                     End Try
+                Else
+                    MyApplication.SetStatusBarMessage("没有查询到销售员！")
                 End If
+            Else
+                MyApplication.StatusBar.SetText("恭喜..没有需要审批的物料！", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
             End If
         End If
     End Sub
