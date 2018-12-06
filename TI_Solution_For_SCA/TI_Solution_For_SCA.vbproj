@@ -163,7 +163,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SCA\MRP\TI_Z0100.vb" />
     <Compile Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.vb" />
     <Compile Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -195,6 +194,8 @@
     <Compile Include="SCA\系统扩展\销售订单扩展\TI_Z000C.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\TI_Z000B.vb" />
     <Compile Include="SCA\系统扩展\销售退货单\TI_Z0007.vb" />
+    <Compile Include="SCA\销售价格调整\TI_Z0101.vb" />
+    <Compile Include="SCA\销售价格调整\TI_Z0100.vb" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -237,6 +238,12 @@
     <Compile Include="BASE\UserLinkButton.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SCA\销售价格调整\TI_Z0101.XML">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SCA\销售价格调整\TI_Z0100.XML">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="SCA\系统扩展\销售退货单\TI_Z00071.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -244,9 +251,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SCA\销售交货向导\TI_Z0150.XML">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SCA\MRP\TI_Z0100.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SCA\系统扩展\采购订单扩展\TI_Z0081.XML">

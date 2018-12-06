@@ -290,6 +290,14 @@ Public Class BaseFunction
                 lbcheck = True
             End If
 
+            '添加销售价格调整界面
+            If Not (App.Menus.Exists("TI_T059")) Then '如果菜单不存在，就添加菜单
+                oMenuItem = App.Menus.Item("2048")
+                oMenus = oMenuItem.SubMenus()
+                oMenuItem = oMenus.Add("TI_T059", "交货价格调整单", SAPbouiCOM.BoMenuType.mt_STRING, 7) '添加一个菜单
+                lbcheck = True
+            End If
+
             '添加MRP计算界面
             ' oMenuItem = App.Menus.Item("2304")
             ' oMenus = oMenuItem.SubMenus()

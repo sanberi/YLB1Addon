@@ -89,6 +89,19 @@ Public NotInheritable Class TI_Z000A
                     loItemChoose.LinkTo = "10000330"
                     loBtn_approve = loItemChoose.Specific
                     loBtn_approve.Caption = "红帐超限审批"
+
+                    '非挂账付款方式发货金额超过5000审批
+                    loBtn_Create1 = MyForm.Items.Item("approve2")
+                    loItemChoose = MyForm.Items.Add("approve3", BoFormItemTypes.it_BUTTON)
+                    loItemChoose.Left = loBtn_Create1.Left
+                    loItemChoose.Width = loBtn_Create1.Width
+                    loItemChoose.Top = loBtn_Create1.Top - loBtn_Create1.Height - 5
+                    loItemChoose.Height = loBtn_Create1.Height
+                    loItemChoose.AffectsFormMode = False
+                    loItemChoose.LinkTo = "approve2"
+                    loBtn_approve = loItemChoose.Specific
+                    loBtn_approve.Caption = "非挂账审批"
+
                 End If
             Case BoEventTypes.et_ITEM_PRESSED
                 If Not pVal.Before_Action And pVal.ItemUID = "Export" Then
@@ -197,6 +210,15 @@ Public NotInheritable Class TI_Z000A
                         Dim liBaseKey As Integer
                         liBaseKey = ioDbds_ODLN.GetValue("DocEntry", 0)
                         approve2(liBaseKey)
+                    Else
+                        MyApplication.SetStatusBarMessage("请先添加或者更新单据！")
+                    End If
+                ElseIf Not pVal.Before_Action And pVal.ItemUID = "approve3" Then
+                    '触发审批
+                    If MyForm.Mode = BoFormMode.fm_OK_MODE Then
+                        Dim liBaseKey As Integer
+                        liBaseKey = ioDbds_ODLN.GetValue("DocEntry", 0)
+                        approve3(liBaseKey)
                     Else
                         MyApplication.SetStatusBarMessage("请先添加或者更新单据！")
                     End If
@@ -481,6 +503,75 @@ Public NotInheritable Class TI_Z000A
                                 '通过单号请求审批信息
                                 Try
                                     lsSql = "Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select " + liAppEntry.ToString() + ",'OMS0001'," + liBaseKey.ToString() + ",GETDATE(),'N','O','SP0003'"
+                                    ioTempSql.ExecuteQuery(lsSql)
+                                Catch ex As Exception
+                                    MyApplication.SetStatusBarMessage("插入审批表异常，请联系IT部,错误信息:" + ex.Message.ToString())
+                                End Try
+                            End If
+                        End If
+                    Catch ex As Exception
+                        MyApplication.SetStatusBarMessage("审批触发异常(本地),错误信息:" + ex.Message.ToString())
+                    End Try
+                End If
+            End If
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' 非挂账付款方式发货金额超过5000审批
+    ''' </summary>
+    ''' <param name="liBaseKey"></param>
+    Private Sub approve3(liBaseKey As Integer)
+        If liBaseKey > 0 Then
+            '是否需要审批
+            Dim lsSql1 As String
+            lsSql1 = "exec YL_ODLNPaymethodout5000 '" + Convert.ToString(liBaseKey) + "'"
+            ioTempSql.ExecuteQuery(lsSql1)
+            Dim lsCardCode As String
+            lsCardCode = ioTempSql.GetValue("CardCode", 0)
+            If Not String.IsNullOrEmpty(lsCardCode) Then
+                lsCardCode = lsCardCode.Trim
+            End If
+
+            If Not String.IsNullOrEmpty(lsCardCode) Then
+                Dim lsSql As String
+                lsSql = "Select t11.SalerCode from OCRD t10 inner join RW0001 t11 on t10.CardCode='" + lsCardCode + "' and t10.U_Saler=t11.SalerName"
+                ioTempSql.ExecuteQuery(lsSql)
+                Dim lsSalerCode As String
+                lsSalerCode = ioTempSql.GetValue(0, 0)
+                If Not String.IsNullOrEmpty(lsSalerCode) Then
+                    lsSalerCode = lsSalerCode.Trim
+                End If
+                If Not String.IsNullOrEmpty(lsSalerCode) Then
+                    Dim lsstring As String
+                    Dim loWebAPIRequest As WebAPIRequest(Of MDM007606Request) = New WebAPIRequest(Of MDM007606Request)
+                    loWebAPIRequest.Content = New MDM007606Request()
+                    loWebAPIRequest.Content.Code = "SP0008"
+                    loWebAPIRequest.Content.IsDesignated = "N"
+                    loWebAPIRequest.Content.InputJson = ""
+                    loWebAPIRequest.Content.BaseType = "OMS0001"
+                    loWebAPIRequest.Content.BaseKey = liBaseKey
+                    'loWebAPIRequest.Content.UserCode = lsSalerCode
+                    'loWebAPIRequest.UserCode = lsSalerCode
+                    loWebAPIRequest.Content.UserCode = "P0013"
+                    loWebAPIRequest.UserCode = "P0013"
+                    lsstring = Newtonsoft.Json.JsonConvert.SerializeObject(loWebAPIRequest)
+                    'lsSql = "Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select " + liBaseKey.ToString() + ",'OMS0001'," + liBaseKey.ToString() + ",GETDATE(),'N','O','SP0008'"
+                    'ioTempSql.ExecuteQuery(lsSql)
+
+                    Try
+                        Dim lsRString As String = BaseFunction.PostMoths(BaseFunction.isURL + "/MDM0076/MDM007606", lsstring)
+                        Dim loWebAPIResponse As WebAPIResponse(Of MDM007606Response) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of WebAPIResponse(Of MDM007606Response))(lsRString)
+                        If (loWebAPIResponse.Status <> 200) Then
+                            MyApplication.SetStatusBarMessage("审批触发异常(远程),错误信息:" + loWebAPIResponse.Message)
+                        Else
+                            Dim liAppEntry As Long
+                            liAppEntry = loWebAPIResponse.Content.DocEntry
+                            If liAppEntry > 0 Then
+                                MyApplication.StatusBar.SetText("审批触发成功,审批单号:" + liAppEntry.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                                '通过单号请求审批信息
+                                Try
+                                    lsSql = "Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select " + liAppEntry.ToString() + ",'OMS0001'," + liBaseKey.ToString() + ",GETDATE(),'N','O','SP0008'"
                                     ioTempSql.ExecuteQuery(lsSql)
                                 Catch ex As Exception
                                     MyApplication.SetStatusBarMessage("插入审批表异常，请联系IT部,错误信息:" + ex.Message.ToString())
