@@ -24,6 +24,7 @@ Public NotInheritable Class TI_Z0100
         Select Case BusinessObjectInfo.EventType
             Case BoEventTypes.et_FORM_DATA_LOAD
                 If Not BusinessObjectInfo.BeforeAction Then
+                    Dim myStr As String = MyForm.GetAsXML
                     '判断如果单据是已清，单据不可再编辑，如果未清，可以编辑
                     Dim lsDocstatus As String
                     lsDocstatus = ioDbds_TI_Z0100.GetValue("Status", 0)
@@ -34,7 +35,12 @@ Public NotInheritable Class TI_Z0100
                     End If
 
                 End If
-
+            Case BoEventTypes.et_FORM_DATA_ADD
+                If ioDbds_TI_Z0101.Size = 1 Then
+                    'MyApplication.SetStatusBarMessage("无有效数据！", BoMessageTime.bmt_Short, True)
+                    MyApplication.MessageBox("无有效数据！")
+                    BubbleEvent = False
+                End If
         End Select
 
     End Sub
@@ -67,6 +73,24 @@ Public NotInheritable Class TI_Z0100
                     End If
                 End If
             Case BoEventTypes.et_ITEM_PRESSED
+                'Find
+                If Not pVal.Before_Action And MyForm.Mode = BoFormMode.fm_FIND_MODE And pVal.ItemUID = "1" Then
+                    Dim myConditions As Conditions = New Conditions()
+                    Dim oCondition As Condition = myConditions.Add
+                    'Dim curDocNum As String = ioDbds_TI_Z0100.GetValue("DocNum", 0)
+                    Dim curDocNum As String = MyForm.Items.Item("DocNum").Specific.Value
+                    If String.IsNullOrEmpty(curDocNum) Then
+                        MyApplication.SetStatusBarMessage("请输入单号！")
+                        Return
+                    End If
+                    oCondition.Alias = "DocEntry"
+                    oCondition.Operation = BoConditionOperation.co_EQUAL
+                    oCondition.CondVal = curDocNum
+                    ioDbds_TI_Z0100.Query(myConditions)
+                    ioDbds_TI_Z0101.Query(myConditions)
+                    Dim myMatrix As Matrix = MyForm.Items.Item("Mtx_10").Specific
+                    myMatrix.LoadFromDataSource()
+                End If
                 '复制从没有做过发票和退货的交货
                 If Not pVal.Before_Action And pVal.ItemUID = "CopyFODLN" Then
                     Dim lsCardCode As String

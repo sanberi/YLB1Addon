@@ -1,9 +1,12 @@
 ﻿Option Strict Off
 Option Explicit On
 Imports SAPbouiCOM
+Imports B1Extra
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports Microsoft.VisualBasic.CompilerServices
+Imports Newtonsoft.Json
 
 Public NotInheritable Class TI_Z000A
     Inherits FormBase
@@ -91,16 +94,16 @@ Public NotInheritable Class TI_Z000A
                     loBtn_approve.Caption = "红帐超限审批"
 
                     '非挂账付款方式发货金额超过5000审批
-                    loBtn_Create1 = MyForm.Items.Item("approve2")
-                    loItemChoose = MyForm.Items.Add("approve3", BoFormItemTypes.it_BUTTON)
-                    loItemChoose.Left = loBtn_Create1.Left
-                    loItemChoose.Width = loBtn_Create1.Width
-                    loItemChoose.Top = loBtn_Create1.Top - loBtn_Create1.Height - 5
-                    loItemChoose.Height = loBtn_Create1.Height
-                    loItemChoose.AffectsFormMode = False
-                    loItemChoose.LinkTo = "approve2"
-                    loBtn_approve = loItemChoose.Specific
-                    loBtn_approve.Caption = "非挂账审批"
+                    'loBtn_Create1 = MyForm.Items.Item("approve2")
+                    'loItemChoose = MyForm.Items.Add("approve3", BoFormItemTypes.it_BUTTON)
+                    'loItemChoose.Left = loBtn_Create1.Left
+                    'loItemChoose.Width = loBtn_Create1.Width
+                    'loItemChoose.Top = loBtn_Create1.Top - loBtn_Create1.Height - 5
+                    'loItemChoose.Height = loBtn_Create1.Height
+                    'loItemChoose.AffectsFormMode = False
+                    'loItemChoose.LinkTo = "approve2"
+                    'loBtn_approve = loItemChoose.Specific
+                    'loBtn_approve.Caption = "非挂账审批"
 
                 End If
             Case BoEventTypes.et_ITEM_PRESSED
@@ -395,6 +398,57 @@ Public NotInheritable Class TI_Z000A
                 End If
         End Select
     End Sub
+    Private Sub myapprove(ByVal liBaseKey As Integer)
+        If (liBaseKey > 0) Then
+            Dim str As String = Me.ioDbds_ODLN.GetValue("CardCode", 0)
+            If Not String.IsNullOrEmpty(str) Then
+                str = str.Trim
+            End If
+            Try
+                Dim provider As ApprovalDataProvider = New ApprovalDataProvider(DirectCast(MyBase.MyApplication.Company.GetDICompany, Company), Conversions.ToString(liBaseKey), str)
+                Dim request As New WebAPIRequest(Of MDM007606Request) With {
+                .Content = New MDM007606Request
+            }
+                request.Content.Code = provider.ApprovalCode
+                request.Content.IsDesignated = provider.IsDesignated
+                request.Content.InputJson = ""
+                request.Content.BaseType = provider.BaseType
+                request.Content.BaseKey = provider.BaseKey
+                request.Content.UserCode = provider.SalerCode
+                request.UserCode = provider.SalerCode
+                Dim param As String = JsonConvert.SerializeObject(request)
+                Dim response As WebAPIResponse(Of MDM007606Response) = JsonConvert.DeserializeObject(Of WebAPIResponse(Of MDM007606Response))(BaseFunction.PostMoths(provider.PostAddress, param))
+                If (response.Status <> 200) Then
+                    MyBase.MyApplication.SetStatusBarMessage(("审批触发异常(远程),错误信息:" & response.Message), BoMessageTime.bmt_Medium, True)
+                Else
+                    Dim docEntry As Long = response.Content.DocEntry
+                    If (docEntry > 0) Then
+                        MyBase.MyApplication.StatusBar.SetText(("审批触发成功,审批单号:" & docEntry.ToString), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                        Try
+                            Dim textArray1 As String() = New String() {"Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select ", docEntry.ToString, ",'OMS0001',", liBaseKey.ToString, ",GETDATE(),'N','O','SP0001'"}
+                            Dim query As String = String.Concat(textArray1)
+                            Me.ioTempSql.ExecuteQuery(query)
+                            Dim textArray2 As String() = New String() {"UPDATE T0 SET U_APPNo='", docEntry.ToString, "' FROM ORDR T0 WHERE DocEntry='", liBaseKey.ToString, "'"}
+                            query = String.Concat(textArray2)
+                            Me.ioTempSql.ExecuteQuery(query)
+                        Catch exception1 As Exception
+                            Dim exception As Exception = exception1
+                            MyBase.MyApplication.SetStatusBarMessage(("插入审批表异常，请联系IT部,错误信息:" & exception.Message.ToString), BoMessageTime.bmt_Medium, True)
+                        End Try
+                    End If
+                End If
+            Catch exception3 As Exception
+                Dim exception2 As Exception = exception3
+                MyBase.MyApplication.SetStatusBarMessage(("审批触发异常(本地),错误信息:" & exception2.Message.ToString), BoMessageTime.bmt_Medium, True)
+            End Try
+        End If
+    End Sub
+
+
+
+
+
+
 
     ''' <summary>
     ''' 负毛利审批

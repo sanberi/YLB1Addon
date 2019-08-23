@@ -304,12 +304,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="BASE\bin\Debug\" />
     <Folder Include="bin\" />
     <Folder Include="SCA\Item权限控制\" />
@@ -343,6 +337,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\B1Extra\B1Extra.csproj">
+      <Project>{8b12249a-8420-4457-a726-37a8c39325d5}</Project>
+      <Name>B1Extra</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
