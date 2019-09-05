@@ -405,7 +405,7 @@ Public NotInheritable Class TI_Z000A
                 str = str.Trim
             End If
             Try
-                Dim provider As ApprovalDataProvider = New ApprovalDataProvider(DirectCast(MyBase.MyApplication.Company.GetDICompany, Company), Conversions.ToString(liBaseKey), str)
+                Dim provider As ApprovalDataProvider = New ApprovalDataProvider(MyApplication.Company.GetDICompany, "17", Conversions.ToString(liBaseKey), str, True)
                 Dim request As New WebAPIRequest(Of MDM007606Request) With {
                 .Content = New MDM007606Request
             }
@@ -413,7 +413,7 @@ Public NotInheritable Class TI_Z000A
                 request.Content.IsDesignated = provider.IsDesignated
                 request.Content.InputJson = ""
                 request.Content.BaseType = provider.BaseType
-                request.Content.BaseKey = provider.BaseKey
+                request.Content.BaseKey = provider.DocEntry
                 request.Content.UserCode = provider.SalerCode
                 request.UserCode = provider.SalerCode
                 Dim param As String = JsonConvert.SerializeObject(request)
@@ -428,9 +428,9 @@ Public NotInheritable Class TI_Z000A
                             Dim textArray1 As String() = New String() {"Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select ", docEntry.ToString, ",'OMS0001',", liBaseKey.ToString, ",GETDATE(),'N','O','SP0001'"}
                             Dim query As String = String.Concat(textArray1)
                             Me.ioTempSql.ExecuteQuery(query)
-                            Dim textArray2 As String() = New String() {"UPDATE T0 SET U_APPNo='", docEntry.ToString, "' FROM ORDR T0 WHERE DocEntry='", liBaseKey.ToString, "'"}
-                            query = String.Concat(textArray2)
-                            Me.ioTempSql.ExecuteQuery(query)
+                            'Dim textArray2 As String() = New String() {"UPDATE T0 SET U_APPNo='", docEntry.ToString, "' FROM ORDR T0 WHERE DocEntry='", liBaseKey.ToString, "'"}
+                            'query = String.Concat(textArray2)
+                            'Me.ioTempSql.ExecuteQuery(query)
                         Catch exception1 As Exception
                             Dim exception As Exception = exception1
                             MyBase.MyApplication.SetStatusBarMessage(("插入审批表异常，请联系IT部,错误信息:" & exception.Message.ToString), BoMessageTime.bmt_Medium, True)

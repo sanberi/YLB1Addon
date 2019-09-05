@@ -4,6 +4,9 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports B1Extra
+Imports Microsoft.VisualBasic.CompilerServices
+Imports Newtonsoft.Json
 
 Public NotInheritable Class TI_Z0100
     Inherits FormBase
@@ -149,42 +152,47 @@ Public NotInheritable Class TI_Z0100
 
                     Try
                         Dim lsDocentry As String = ioDbds_TI_Z0100.GetValue("DocEntry", 0)
-                        Dim lsItemCode, lsAppEntry As String
-                        '判断是否存在低于成本的销售价，如果低于，一定要先提交审批
-                        Dim lsSQL1 As String = "select T10.U_ItemCode from [@TI_Z0101]  T10 inner join [@TI_Z0100] t11 ON T10.DOCENTRY=T11.DOCENTRY
-		                                    inner join OITW T12 on T10.U_ItemCode =T12.ItemCode and T10.U_WhsCode =t12.WhsCode 
-		                                     where Round(T10.U_Price,4) <Round(T12.AvgPrice ,4)  and T10.docentry= '" + lsDocentry.Trim + "'"
-                        ioTempSql.ExecuteQuery(lsSQL1)
-                        If ioTempSql.Rows.Count > 0 Then
-                            lsItemCode = ioTempSql.GetValue("U_ItemCode", 0)
-                            If Not String.IsNullOrEmpty(lsItemCode) Then
-                                '查看负毛利审批单是否有，如果没有提示
+                        Dim lsCardCode As String = ioDbds_TI_Z0100.GetValue("U_CardCode", 0)
 
-                                Dim lsSQL3 As String = "select AppEntry from MDM0076_Approve T120 where t120.BaseType='OMS0001' and t120.APPCode='SP0004'  and t120.Canceled='N' and t120.Basekey ='" + lsDocentry.Trim + "'"
-                                ioTempSql.ExecuteQuery(lsSQL3)
-                                If ioTempSql.Rows.Count > 0 And ioTempSql.GetValue("AppEntry", 0) = "0" Then
-                                    MyApplication.SetStatusBarMessage("负毛利审批单不存在，请先进行审批,物料 " + lsItemCode.Trim + "!", BoMessageTime.bmt_Medium, True)
-                                    Return
-                                End If
-                                If ioTempSql.Rows.Count <= 0 Then
-                                    MyApplication.SetStatusBarMessage("负毛利审批单不存在，请先进行审批,物料 " + lsItemCode.Trim + "!", BoMessageTime.bmt_Medium, True)
-                                    Return
-                                End If
+                        Dim provider As ApprovalDataProvider = New ApprovalDataProvider(MyApplication.Company.GetDICompany, "TI_Z0100", Conversions.ToString(lsDocentry), lsCardCode, False)
+
+                        'Dim lsItemCode, lsAppEntry As String
+                        ''判断是否存在低于成本的销售价，如果低于，一定要先提交审批
+                        'Dim lsSQL1 As String = "select T10.U_ItemCode from [@TI_Z0101]  T10 inner join [@TI_Z0100] t11 ON T10.DOCENTRY=T11.DOCENTRY
+                        '              inner join OITW T12 on T10.U_ItemCode =T12.ItemCode and T10.U_WhsCode =t12.WhsCode 
+                        '               where Round(T10.U_Price,4) <Round(T12.AvgPrice ,4)  and T10.docentry= '" + lsDocentry.Trim + "'"
+                        'ioTempSql.ExecuteQuery(lsSQL1)
+                        'If ioTempSql.Rows.Count > 0 Then
+                        '    lsItemCode = ioTempSql.GetValue("U_ItemCode", 0)
+                        '    If Not String.IsNullOrEmpty(lsItemCode) Then
+                        '        '查看负毛利审批单是否有，如果没有提示
+
+                        '        Dim lsSQL3 As String = "select AppEntry from MDM0076_Approve T120 where t120.BaseType='OMS0001' and t120.APPCode='SP0004'  and t120.Canceled='N' and t120.Basekey ='" + lsDocentry.Trim + "'"
+                        '        ioTempSql.ExecuteQuery(lsSQL3)
+                        '        If ioTempSql.Rows.Count > 0 And ioTempSql.GetValue("AppEntry", 0) = "0" Then
+                        '            MyApplication.SetStatusBarMessage("负毛利审批单不存在，请先进行审批,物料 " + lsItemCode.Trim + "!", BoMessageTime.bmt_Medium, True)
+                        '            Return
+                        '        End If
+                        '        If ioTempSql.Rows.Count <= 0 Then
+                        '            MyApplication.SetStatusBarMessage("负毛利审批单不存在，请先进行审批,物料 " + lsItemCode.Trim + "!", BoMessageTime.bmt_Medium, True)
+                        '            Return
+                        '        End If
 
 
-                                Dim lsSQL2 As String = "select AppEntry from MDM0076_Approve T120 where t120.BaseType='OMS0001' and t120.APPCode='SP0004'  and t120.AppStatus in('O','N')  and t120.Canceled='N' and t120.Basekey ='" + lsDocentry.Trim + "'"
-                                    ioTempSql.ExecuteQuery(lsSQL2)
-                                    If ioTempSql.Rows.Count > 0 Then
-                                        lsAppEntry = ioTempSql.GetValue("AppEntry", 0)
-                                        If Not String.IsNullOrEmpty(lsAppEntry) And lsAppEntry <> "0" Then
-                                            MyApplication.SetStatusBarMessage("审批没有通过，请先确认审批通过,审批单号" + lsAppEntry.Trim + "！", BoMessageTime.bmt_Medium, True)
-                                            Return
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        Dim lsSQL, lsCardCode As String
-                        lsCardCode = ioDbds_TI_Z0100.GetValue("U_CardCode", 0)
+                        '        Dim lsSQL2 As String = "select AppEntry from MDM0076_Approve T120 where t120.BaseType='OMS0001' and t120.APPCode='SP0004'  and t120.AppStatus in('O','N')  and t120.Canceled='N' and t120.Basekey ='" + lsDocentry.Trim + "'"
+                        '        ioTempSql.ExecuteQuery(lsSQL2)
+                        '        If ioTempSql.Rows.Count > 0 Then
+                        '            lsAppEntry = ioTempSql.GetValue("AppEntry", 0)
+                        '            If Not String.IsNullOrEmpty(lsAppEntry) And lsAppEntry <> "0" Then
+                        '                MyApplication.SetStatusBarMessage("审批没有通过，请先确认审批通过,审批单号" + lsAppEntry.Trim + "！", BoMessageTime.bmt_Medium, True)
+                        '                Return
+                        '            End If
+                        '        End If
+                        '    End If
+                        'End If
+                        'Dim lsSQL, lsCardCode As String
+                        'lsCardCode = ioDbds_TI_Z0100.GetValue("U_CardCode", 0)
+                        Dim lsSQL As String
                         lsSQL = "exec YL_ChangeODLNPrice '" + lsDocentry + "','" + lsCardCode.Trim() + "'"
                         ioTempSql.ExecuteQuery(lsSQL)
                         MyApplication.SetStatusBarMessage("交货单价格已更新成功！", BoMessageTime.bmt_Medium, False)
@@ -208,7 +216,7 @@ Public NotInheritable Class TI_Z0100
                     Integer.TryParse(ioDbds_TI_Z0100.GetValue("DocEntry", 0), liDocEntry)
                     'liDocEntry = MyForm.DataSources.DBDataSources.Item(0).GetValue("DocEntry", 0)
                     If liDocEntry > 0 Then
-                        approve(liDocEntry)
+                        myapprove(liDocEntry)
                     End If
                 End If
             Case BoEventTypes.et_VALIDATE
@@ -307,6 +315,49 @@ Public NotInheritable Class TI_Z0100
                     End Try
                 End If
             End If
+        End If
+    End Sub
+    Private Sub myapprove(liBaseKey As Integer)
+        If liBaseKey > 0 Then
+            Dim lsCardCode As String = ioDbds_TI_Z0100.GetValue("U_CardCode", 0)
+            If Not String.IsNullOrEmpty(lsCardCode) Then
+                lsCardCode = lsCardCode.Trim
+            End If
+            Try
+                Dim provider As ApprovalDataProvider = New ApprovalDataProvider(MyApplication.Company.GetDICompany, "TI_Z0100", Conversions.ToString(liBaseKey), lsCardCode, True)
+                Dim request As WebAPIRequest(Of MDM007606Request) = New WebAPIRequest(Of MDM007606Request)
+                request.Content.Code = provider.ApprovalCode
+                request.Content.IsDesignated = provider.IsDesignated
+                request.Content.InputJson = ""
+                request.Content.BaseType = provider.BaseType
+                request.Content.BaseKey = provider.DocEntry
+                request.Content.UserCode = provider.SalerCode
+                request.UserCode = provider.SalerCode
+                Dim param As String = JsonConvert.SerializeObject(request)
+                Dim response As WebAPIResponse(Of MDM007606Response) = JsonConvert.DeserializeObject(Of WebAPIResponse(Of MDM007606Response))(BaseFunction.PostMoths(provider.PostAddress, param))
+                If (response.Status <> 200) Then
+                    MyBase.MyApplication.SetStatusBarMessage(("审批触发异常(远程),错误信息:" & response.Message), BoMessageTime.bmt_Medium, True)
+                Else
+                    Dim docEntry As Long = response.Content.DocEntry
+                    If (docEntry > 0) Then
+                        MyBase.MyApplication.StatusBar.SetText(("审批触发成功,审批单号:" & docEntry.ToString), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
+                        Try
+                            Dim textArray1 As String() = New String() {"Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select ", docEntry.ToString, ",'OMS0001',", liBaseKey.ToString, ",GETDATE(),'N','O','SP0001'"}
+                            Dim query As String = String.Concat(textArray1)
+                            Me.ioTempSql.ExecuteQuery(query)
+                            'Dim textArray2 As String() = New String() {"UPDATE T0 SET U_APPNo='", docEntry.ToString, "' FROM ORDR T0 WHERE DocEntry='", liBaseKey.ToString, "'"}
+                            'query = String.Concat(textArray2)
+                            'Me.ioTempSql.ExecuteQuery(query)
+                        Catch exception1 As Exception
+                            Dim exception As Exception = exception1
+                            MyBase.MyApplication.SetStatusBarMessage(("插入审批表异常，请联系IT部,错误信息:" & exception.Message.ToString), BoMessageTime.bmt_Medium, True)
+                        End Try
+                    End If
+                End If
+            Catch ex As Exception
+                MyApplication.SetStatusBarMessage("审批触发异常(本地),错误信息:" + ex.Message.ToString())
+            End Try
+
         End If
     End Sub
 

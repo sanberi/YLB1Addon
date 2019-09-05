@@ -7,54 +7,41 @@ using System.Text;
 
 namespace B1Extra
 {
-    public class TI_Z0100ApprovalDataProvider : ApprovalDataProvider
-    {
-        public TI_Z0100ApprovalDataProvider(Company oCompany, string objType, string docEntry, string cardCode) : base(
-            oCompany, objType, docEntry, cardCode)
-        {
-
-        }
-        public override bool Verifly()
-        {
-            return true;
-        }
-    }
     public class ApprovalDataProvider
     {
+        private Dictionary<string, string> Department2ApprovalTemlatesMapping;
 
         // Methods
-        public ApprovalDataProvider(Company oCompany, string objType,string docEntry, string cardCode,bool isTriggerApproval=false)
+        public ApprovalDataProvider(Company oCompany, string baseKey, string cardCode)
         {
+            Dictionary<string, string> dictionary1 = new Dictionary<string, string>();
+            dictionary1.Add("D0015", "SP0001");
+            this.Department2ApprovalTemlatesMapping = dictionary1;
             this.MyCompany = oCompany;
-            this.ObjType = objType;
-            this.DocEntry = docEntry;
+            this.BaseKey = baseKey;
             this.CardCode = cardCode;
-            this.IsTriggerApproval = isTriggerApproval;
             this.Verifly();
         }
 
-        public virtual bool Verifly()
+        public bool Verifly()
         {
-            var isTriggerApproval = this.IsTriggerApproval ? "Y" : "N";
-            RecordsetWapper wapper = new RecordsetWapper(this.MyCompany, $"EXEC [YL_SP_VeryfiyApprovalData],'{this.ObjType}' ,'{this.DocEntry}','{isTriggerApproval}','','' ");
+            RecordsetWapper wapper = new RecordsetWapper(this.MyCompany, "EXEC [YL_SP_VeryfiyApprovalData]'17','" + this.BaseKey + "','',''");
             DataTable dataTable = wapper.GetDataTable();
-            string errorCode = wapper.GetScalarValue(0).ToString();
-            string errorMessage = wapper.GetScalarValue(1).ToString();
-            string apvCode = wapper.GetScalarValue(2).ToString();
-            if (int.Parse(errorCode) > 0)
+            string s = wapper.GetScalarValue(0).ToString();
+            string message = wapper.GetScalarValue(1).ToString();
+            string str3 = wapper.GetScalarValue(2).ToString();
+            if (int.Parse(s) > 0)
             {
-                throw new Exception(errorMessage);
+                throw new Exception(message);
             }
-            this.ApprovalCode = apvCode;
+            this.ApprovalCode = str3;
             return true;
         }
 
         // Properties
-        public bool IsTriggerApproval { get; set; } 
-        public string ObjType { get; set; }
         public string ApprovalCode { get; set; }
 
-        public string DocEntry { get; set; }
+        public string BaseKey { get; set; }
 
         public string BaseType { get; set; }
 
