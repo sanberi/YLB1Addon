@@ -7,6 +7,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TI_Solution_For_SCA", "TI_S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B1Extra", "B1Extra\B1Extra.csproj", "{8B12249A-8420-4457-A726-37A8C39325D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiExtend", "TiExtend\TiExtend.csproj", "{6D320FFD-4292-43B4-81FC-9337039C3E56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{8B12249A-8420-4457-A726-37A8C39325D5}.Release|x64.Build.0 = Release|Any CPU
 		{8B12249A-8420-4457-A726-37A8C39325D5}.Release|x86.ActiveCfg = Release|Any CPU
 		{8B12249A-8420-4457-A726-37A8C39325D5}.Release|x86.Build.0 = Release|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Debug|x64.Build.0 = Debug|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Release|x64.ActiveCfg = Release|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Release|x64.Build.0 = Release|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D320FFD-4292-43B4-81FC-9337039C3E56}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

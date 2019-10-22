@@ -425,7 +425,7 @@ Public NotInheritable Class TI_Z000A
                     If (docEntry > 0) Then
                         MyBase.MyApplication.StatusBar.SetText(("审批触发成功,审批单号:" & docEntry.ToString), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
                         Try
-                            Dim textArray1 As String() = New String() {"Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select ", docEntry.ToString, ",'OMS0001',", liBaseKey.ToString, ",GETDATE(),'N','O','SP0001'"}
+                            Dim textArray1 As String() = New String() {"Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select ", docEntry.ToString, ",'OMS0001',", liBaseKey.ToString, ",GETDATE(),'N','O',", provider.ApprovalCode}
                             Dim query As String = String.Concat(textArray1)
                             Me.ioTempSql.ExecuteQuery(query)
                             'Dim textArray2 As String() = New String() {"UPDATE T0 SET U_APPNo='", docEntry.ToString, "' FROM ORDR T0 WHERE DocEntry='", liBaseKey.ToString, "'"}

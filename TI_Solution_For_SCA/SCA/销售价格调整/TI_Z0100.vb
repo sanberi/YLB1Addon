@@ -153,7 +153,7 @@ Public NotInheritable Class TI_Z0100
                     Try
                         Dim lsDocentry As String = ioDbds_TI_Z0100.GetValue("DocEntry", 0)
                         Dim lsCardCode As String = ioDbds_TI_Z0100.GetValue("U_CardCode", 0)
-
+                        '初始化ApprovalDataProvider过程中会对单据进行验证
                         Dim provider As ApprovalDataProvider = New ApprovalDataProvider(MyApplication.Company.GetDICompany, "TI_Z0100", Conversions.ToString(lsDocentry), lsCardCode, False)
 
                         'Dim lsItemCode, lsAppEntry As String
@@ -342,7 +342,7 @@ Public NotInheritable Class TI_Z0100
                     If (docEntry > 0) Then
                         MyBase.MyApplication.StatusBar.SetText(("审批触发成功,审批单号:" & docEntry.ToString), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
                         Try
-                            Dim textArray1 As String() = New String() {"Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select ", docEntry.ToString, ",'OMS0001',", liBaseKey.ToString, ",GETDATE(),'N','O','SP0001'"}
+                            Dim textArray1 As String() = New String() {"Insert into MDM0076_Approve(AppEntry,BaseType,Basekey,CreateDate,Canceled,AppStatus,APPCode) Select ", docEntry.ToString, ",'OMS0001',", liBaseKey.ToString, ",GETDATE(),'N','O',", provider.ApprovalCode}
                             Dim query As String = String.Concat(textArray1)
                             Me.ioTempSql.ExecuteQuery(query)
                             'Dim textArray2 As String() = New String() {"UPDATE T0 SET U_APPNo='", docEntry.ToString, "' FROM ORDR T0 WHERE DocEntry='", liBaseKey.ToString, "'"}

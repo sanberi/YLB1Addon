@@ -208,6 +208,8 @@ Friend Class ItemDispacher
                             loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
                         Case "143"  '收货采购订单草稿界面
                             loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
+                            'Case "10003"
+                            '    loobj = CType(ioFormSL.Item(BusinessObjectInfo.FormUID), FormBase)
                         Case Else
                             loobj = Nothing
                     End Select
@@ -311,6 +313,15 @@ Friend Class ItemDispacher
                         End If
 
                     End If
+                End If
+            End If
+            If pVal.EventType = SAPbouiCOM.BoEventTypes.et_CLICK And pVal.BeforeAction = True And pVal.FormType = 998 And pVal.ItemUID = "11" And (pVal.Row = 87 Or pVal.Row = 35) Then
+                Dim myVal As String
+                myVal = TI_SBO_Application.Company.UserName
+                If TI_SBO_Application.Company.UserName <> "manager" Then
+                    TI_SBO_Application.SetStatusBarMessage("You cann't Change this")
+                    BubbleEvent = False
+                    Return
                 End If
             End If
             Dim loobj As FormBase = Nothing
@@ -1031,5 +1042,9 @@ Friend Class ItemDispacher
         Catch ex As Exception
             TI_SBO_Application.MessageBox(ex.ToString())
         End Try
+    End Sub
+
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
     End Sub
 End Class
