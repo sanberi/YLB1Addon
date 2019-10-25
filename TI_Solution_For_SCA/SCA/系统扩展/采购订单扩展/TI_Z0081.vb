@@ -4,6 +4,7 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports TIModule
 
 Public NotInheritable Class TI_Z0081
     Inherits FormBase
@@ -187,7 +188,7 @@ Public NotInheritable Class TI_Z0081
             MyApplication.Menus.Item("2305").Activate()
             Dim loMatrix As Matrix   '采购订单的matrix
             loActForm = MyApplication.Forms.ActiveForm()
-            loMatrix = loActForm.Items.Item("38").Specific           
+            loMatrix = loActForm.Items.Item("38").Specific
             loActForm.Items.Item("54").Specific.value = lsAgentName   '供应商名称
             ' MyForm.DataSources.DBDataSources.Item(0).SetValue("U_POType", 0, "3")
             Dim PoRow As Integer

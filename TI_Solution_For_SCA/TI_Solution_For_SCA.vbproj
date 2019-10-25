@@ -12,7 +12,7 @@
     <AssemblyName>TI_Solution_For_SCA</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsFormsWithCustomSubMain</MyType>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>Off</OptionStrict>
@@ -40,6 +40,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -155,18 +156,30 @@
   <ItemGroup>
     <Compile Include="BASE\BaseFunction.vb" />
     <Compile Include="BASE\CmpFileDialog.vb" />
-    <Compile Include="BASE\FormBase.vb" />
     <Compile Include="BASE\ItemDispacher.vb" />
     <Compile Include="BASE\MessageAPIs.vb" />
+    <Compile Include="BASE\UserLinkButton.vb" />
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.vb" />
-    <Compile Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.vb" />
+    <Compile Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.vb" />
+    <Compile Include="SCA\系统扩展\业务伙伴主数据\TI_Z0004.vb" />
+    <Compile Include="SCA\系统扩展\业务伙伴主数据\TI_Z0012.vb" />
+    <Compile Include="SCA\系统扩展\交货单扩展\TI_Z0001.vb" />
+    <Compile Include="SCA\系统扩展\库存下发货单\TI_Z0003.vb" />
+    <Compile Include="SCA\系统扩展\库存下收货单\TI_Z0009.vb" />
+    <Compile Include="SCA\系统扩展\库存转储单\TI_Z0006.vb" />
+    <Compile Include="SCA\系统扩展\应付发票\TI_Z0005.vb" />
+    <Compile Include="SCA\系统扩展\批次选择\TI_Z0011.vb" />
     <Compile Include="SCA\系统扩展\收货草稿单扩展\TI_Z000D.vb" />
+    <Compile Include="SCA\系统扩展\采购订单扩展\TI_Z0002.vb" />
+    <Compile Include="SCA\系统扩展\采购订单扩展\TI_Z0081.vb" />
+    <Compile Include="SCA\系统扩展\采购退货单\TI_Z0008.vb" />
+    <Compile Include="SCA\系统扩展\销售报价单扩展\TI_Z0091.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\approve\MDM007606Request.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\approve\MDM007606Response.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\approve\MDM007607Request.vb" />
@@ -175,27 +188,15 @@
     <Compile Include="SCA\系统扩展\销售订单扩展\approve\WebAPIRequestBase.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\approve\WebAPIResponse.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\approve\WebAPIResponseBase.vb" />
-    <Compile Include="SCA\系统扩展\销售退货单\TI_Z00071.vb" />
-    <Compile Include="SCA\销售交货向导\TI_Z0151.vb" />
-    <Compile Include="SCA\销售交货向导\TI_Z0150.vb" />
-    <Compile Include="SCA\系统扩展\业务伙伴主数据\TI_Z0004.vb" />
-    <Compile Include="SCA\系统扩展\交货单扩展\TI_Z0001.vb" />
-    <Compile Include="SCA\系统扩展\库存下发货单\TI_Z0003.vb" />
-    <Compile Include="SCA\系统扩展\库存下收货单\TI_Z0009.vb" />
-    <Compile Include="SCA\系统扩展\库存转储单\TI_Z0006.vb" />
-    <Compile Include="SCA\系统扩展\应付发票\TI_Z0005.vb" />
-    <Compile Include="SCA\系统扩展\批次选择\TI_Z0011.vb" />
-    <Compile Include="SCA\系统扩展\业务伙伴主数据\TI_Z0012.vb" />
-    <Compile Include="SCA\系统扩展\采购订单扩展\TI_Z0002.vb" />
-    <Compile Include="SCA\系统扩展\采购订单扩展\TI_Z0081.vb" />
-    <Compile Include="SCA\系统扩展\采购退货单\TI_Z0008.vb" />
-    <Compile Include="SCA\系统扩展\销售报价单扩展\TI_Z0091.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\TI_Z000A.vb" />
-    <Compile Include="SCA\系统扩展\销售订单扩展\TI_Z000C.vb" />
     <Compile Include="SCA\系统扩展\销售订单扩展\TI_Z000B.vb" />
+    <Compile Include="SCA\系统扩展\销售订单扩展\TI_Z000C.vb" />
     <Compile Include="SCA\系统扩展\销售退货单\TI_Z0007.vb" />
-    <Compile Include="SCA\销售价格调整\TI_Z0101.vb" />
+    <Compile Include="SCA\系统扩展\销售退货单\TI_Z00071.vb" />
+    <Compile Include="SCA\销售交货向导\TI_Z0150.vb" />
+    <Compile Include="SCA\销售交货向导\TI_Z0151.vb" />
     <Compile Include="SCA\销售价格调整\TI_Z0100.vb" />
+    <Compile Include="SCA\销售价格调整\TI_Z0101.vb" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -230,21 +231,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.XML">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BASE\UserLinkButton.vb" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="SCA\销售价格调整\TI_Z0101.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SCA\销售价格调整\TI_Z0100.XML">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SCA\系统扩展\销售退货单\TI_Z00071.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SCA\销售交货向导\TI_Z0151.XML">
@@ -253,10 +243,7 @@
     <EmbeddedResource Include="SCA\销售交货向导\TI_Z0150.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SCA\系统扩展\采购订单扩展\TI_Z0081.XML">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SCA\系统扩展\业务伙伴主数据\TI_Z0012.XML">
+    <EmbeddedResource Include="SCA\系统扩展\销售退货单\TI_Z00071.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SCA\系统扩展\销售订单扩展\TI_Z000C.XML">
@@ -265,10 +252,21 @@
     <EmbeddedResource Include="SCA\系统扩展\销售订单扩展\TI_Z000B.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="SCA\系统扩展\采购订单扩展\TI_Z0081.XML">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SCA\系统扩展\业务伙伴主数据\TI_Z0012.XML">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.XML">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SCA\Addon基础设置\TI_Z0120-窗体打印设置\TI_Z0010.XML">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="BASE\XML\ConfigVVS.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="BASE\LoadUserForm.vb" />
     <EmbeddedResource Include="BASE\XML\TI_AddMenu.XML">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -288,9 +286,6 @@
     <Content Include="BASE\XML\b2e0009.XML" />
     <Content Include="BASE\XML\b2e0022.XML" />
     <Content Include="BASE\XML\b2e0061.XML" />
-    <EmbeddedResource Include="SCA\快递单打印\TI_Z0140-应收发票快递单批量打印\TI_Z0140.XML">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +337,14 @@
     <ProjectReference Include="..\B1Extra\B1Extra.csproj">
       <Project>{8b12249a-8420-4457-a726-37a8c39325d5}</Project>
       <Name>B1Extra</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TiExtend\TiExtend.csproj">
+      <Project>{6d320ffd-4292-43b4-81fc-9337039c3e56}</Project>
+      <Name>TiExtend</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TIModule\TIModule.vbproj">
+      <Project>{81c6ca28-0e27-437c-be2c-c1ec5738eed9}</Project>
+      <Name>TIModule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

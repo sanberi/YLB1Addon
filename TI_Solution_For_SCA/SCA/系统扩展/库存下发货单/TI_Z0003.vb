@@ -4,7 +4,7 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
-
+Imports TIModule
 
 Public NotInheritable Class TI_Z0003
     Inherits FormBase
@@ -158,7 +158,7 @@ Public NotInheritable Class TI_Z0003
                         oExcelApp = Nothing
                         GC.Collect()
                         deadProcess.Kill()  '杀死进程
-                    End Try            
+                    End Try
 
                 End If
         End Select

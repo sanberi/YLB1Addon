@@ -7,6 +7,7 @@ Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
 Imports Microsoft.VisualBasic.CompilerServices
 Imports Newtonsoft.Json
+Imports TIModule
 
 Public NotInheritable Class TI_Z000A
     Inherits FormBase

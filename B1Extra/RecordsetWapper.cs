@@ -7,6 +7,28 @@ using System.Text;
 
 namespace B1Extra
 {
+    public static class YLConfiguration
+    {
+        private static Dictionary<string, string> YLConfig;
+
+         static YLConfiguration()
+        {
+            YLConfig = new Dictionary<string, string>();
+        }
+        public static string GetConfig(Company oCompany,string config)
+        {
+            if (YLConfig.ContainsKey(config))
+            {
+                return YLConfig[config];
+            }
+            else
+            {
+                 var configValue=new RecordsetWapper(oCompany, $"SELECT U_Value FROM [@YL_Config] WHERE Code='{config}'").GetScalarValue().ToString();
+                YLConfig.Add(config,configValue);
+                return configValue;
+            }
+        }
+    }
     public class RecordsetWapper
     {
         // Fields

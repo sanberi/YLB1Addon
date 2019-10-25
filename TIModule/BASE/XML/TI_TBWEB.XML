@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<forms>
+  <form FormType="149" title="销售报价单" Matrix="38" ItemCol="1" WhsCodeCol="24"></form>
+  <form FormType="139" title="销售订单" Matrix="38" ItemCol="1" WhsCodeCol="24"></form>
+  <form FormType="180" title="销售退货" Matrix="38" ItemCol="1" WhsCodeCol="24"></form>
+  <form FormType="140" title="销售交货" Matrix="38" ItemCol="1" WhsCodeCol="24"></form>
+  <form FormType="142" title="采购订单" Matrix="38" ItemCol="1" WhsCodeCol="24"></form>
+  <form FormType="182" title="采购退货" Matrix="38" ItemCol="1" WhsCodeCol="24"></form>
+  <form FormType="143" title="收货采购订单" Matrix="38" ItemCol="1" WhsCodeCol="24"></form>
+  <form FormType="940" title="库存转储" Matrix="23" ItemCol="1" WhsCodeCol="5"></form>
+  <form FormType="721" title="库存收货" Matrix="13" ItemCol="1" WhsCodeCol="15"></form>
+  <form FormType="65214" title="生产收货" Matrix="13" ItemCol="1" WhsCodeCol="15"></form>
+  <form FormType="65211" title="生产订单" Matrix="37" ItemCol="4" WhsCodeCol="10"></form>
+</forms>

@@ -4,6 +4,7 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports TIModule
 
 Public NotInheritable Class TI_Z0007
     Inherits FormBase
@@ -237,7 +238,7 @@ Public NotInheritable Class TI_Z0007
                     Try
                         oExcelApp.Run("Sheet1.FindPrinter", lsU_Printer, lsU_PsizeID, lsFlag)
                         oExcelApp.ScreenUpdating = False
-                        oExcelApp.Run("GetDataString", lsdocentry)
+                        oExcelApp.Run("GetDataString", lsDocEntry)
                         oExcelApp.ScreenUpdating = True
                         ' oExcelApp.printsettints.copies = 3;
                         m_objSheet.PrintOutEx()

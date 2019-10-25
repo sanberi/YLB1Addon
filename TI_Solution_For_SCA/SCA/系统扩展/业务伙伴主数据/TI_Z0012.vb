@@ -4,6 +4,7 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports TIModule
 
 Public NotInheritable Class TI_Z0012
     Inherits FormBase

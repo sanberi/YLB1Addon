@@ -4,6 +4,7 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports TIModule
 
 Public NotInheritable Class TI_Z0005
     Inherits FormBase
@@ -132,52 +133,52 @@ Public NotInheritable Class TI_Z0005
 
                     Dim lsTargetFile As String = lsServicePath + lsTempEXCEL
                     Dim lsU_Printer As String = lsPrintName  '打印机名称
-                        Dim lsU_PsizeID As String = lsPageSize   '打印机纸张
-                        Dim lsSourcePath As String  '原始表格路径
-                        lsSourcePath = lsPageSize
+                    Dim lsU_PsizeID As String = lsPageSize   '打印机纸张
+                    Dim lsSourcePath As String  '原始表格路径
+                    lsSourcePath = lsPageSize
 
-                        '打开Excel
-                        Dim oExcelApp As Microsoft.Office.Interop.Excel.Application
-                        oExcelApp = New Microsoft.Office.Interop.Excel.Application
-                        Dim hwnd As Integer = CInt(oExcelApp.Hwnd)
-                        Dim processid As Integer
-                        GetWindowThreadProcessId(hwnd, processid)
+                    '打开Excel
+                    Dim oExcelApp As Microsoft.Office.Interop.Excel.Application
+                    oExcelApp = New Microsoft.Office.Interop.Excel.Application
+                    Dim hwnd As Integer = CInt(oExcelApp.Hwnd)
+                    Dim processid As Integer
+                    GetWindowThreadProcessId(hwnd, processid)
 
-                        Dim m_objBooks As Microsoft.Office.Interop.Excel.Workbooks
-                        Dim m_objBook As Microsoft.Office.Interop.Excel.Workbook
-                        Dim m_objSheets As Microsoft.Office.Interop.Excel.Sheets
-                        Dim m_objSheet As Microsoft.Office.Interop.Excel.Worksheet
+                    Dim m_objBooks As Microsoft.Office.Interop.Excel.Workbooks
+                    Dim m_objBook As Microsoft.Office.Interop.Excel.Workbook
+                    Dim m_objSheets As Microsoft.Office.Interop.Excel.Sheets
+                    Dim m_objSheet As Microsoft.Office.Interop.Excel.Worksheet
 
-                        ' File.Copy(lsSourcePath, lsTargetFile, True)
+                    ' File.Copy(lsSourcePath, lsTargetFile, True)
 
-                        oExcelApp.Visible = True
-                        oExcelApp.DisplayAlerts = False
-                        m_objBooks = oExcelApp.Workbooks
-                        m_objBook = m_objBooks.Open(lsTargetFile)
+                    oExcelApp.Visible = True
+                    oExcelApp.DisplayAlerts = False
+                    m_objBooks = oExcelApp.Workbooks
+                    m_objBook = m_objBooks.Open(lsTargetFile)
 
-                        m_objSheets = m_objBook.Worksheets
-                        m_objSheet = m_objSheets.Item(1) '定位第一张表
-                        m_objSheet.Activate()
+                    m_objSheets = m_objBook.Worksheets
+                    m_objSheet = m_objSheets.Item(1) '定位第一张表
+                    m_objSheet.Activate()
 
-                        '设置打印机，纸张
-                        '检查打印机是否正确
-                        Dim doc As System.Drawing.Printing.PrintDocument = New System.Drawing.Printing.PrintDocument()
-                        doc.PrinterSettings.PrinterName = lsU_Printer
-                        doc.DefaultPageSettings.PrinterSettings.Copies = 1
-                        doc.PrinterSettings.Copies = 1
-                        Dim lsFlag As String = "2"
-                        If Not doc.PrinterSettings.IsValid Then
-                            lsFlag = "1"
-                        End If
-                        doc = Nothing
-                        GC.Collect()
+                    '设置打印机，纸张
+                    '检查打印机是否正确
+                    Dim doc As System.Drawing.Printing.PrintDocument = New System.Drawing.Printing.PrintDocument()
+                    doc.PrinterSettings.PrinterName = lsU_Printer
+                    doc.DefaultPageSettings.PrinterSettings.Copies = 1
+                    doc.PrinterSettings.Copies = 1
+                    Dim lsFlag As String = "2"
+                    If Not doc.PrinterSettings.IsValid Then
+                        lsFlag = "1"
+                    End If
+                    doc = Nothing
+                    GC.Collect()
 
-                        '打印
-                        Try
-                            oExcelApp.Run("Sheet1.FindPrinter", lsU_Printer, lsU_PsizeID, lsFlag)
-                            oExcelApp.ScreenUpdating = False
-                            oExcelApp.Run("GetDataString", Convert.ToString(liDocEntry))
-                            oExcelApp.ScreenUpdating = True
+                    '打印
+                    Try
+                        oExcelApp.Run("Sheet1.FindPrinter", lsU_Printer, lsU_PsizeID, lsFlag)
+                        oExcelApp.ScreenUpdating = False
+                        oExcelApp.Run("GetDataString", Convert.ToString(liDocEntry))
+                        oExcelApp.ScreenUpdating = True
 
                         m_objSheet.PrintOutEx()
 
@@ -186,21 +187,21 @@ Public NotInheritable Class TI_Z0005
                         ioTempSql.ExecuteQuery(lsInsertSQL)
 
                     Catch ex As Exception
-                            MyApplication.SetStatusBarMessage(ex.ToString())
-                            BubbleEvent = False
-                            '   File.Delete(lsTargetFile)
-                            ' Return
-                        Finally
-                            m_objBook.Close()
-                            Dim deadProcess As Process = Process.GetProcessById(processid)  '获取该进程
-                            oExcelApp.Quit()
-                            System.Runtime.InteropServices.Marshal.ReleaseComObject(oExcelApp)
-                            oExcelApp = Nothing
-                            GC.Collect()
-                            deadProcess.Kill()  '杀死进程
-                        End Try
+                        MyApplication.SetStatusBarMessage(ex.ToString())
+                        BubbleEvent = False
+                        '   File.Delete(lsTargetFile)
+                        ' Return
+                    Finally
+                        m_objBook.Close()
+                        Dim deadProcess As Process = Process.GetProcessById(processid)  '获取该进程
+                        oExcelApp.Quit()
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(oExcelApp)
+                        oExcelApp = Nothing
+                        GC.Collect()
+                        deadProcess.Kill()  '杀死进程
+                    End Try
 
-                    End If
+                End If
         End Select
     End Sub
 End Class

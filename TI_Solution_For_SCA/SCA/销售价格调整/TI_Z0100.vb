@@ -7,6 +7,7 @@ Imports System.Runtime.InteropServices
 Imports B1Extra
 Imports Microsoft.VisualBasic.CompilerServices
 Imports Newtonsoft.Json
+Imports TIModule
 
 Public NotInheritable Class TI_Z0100
     Inherits FormBase

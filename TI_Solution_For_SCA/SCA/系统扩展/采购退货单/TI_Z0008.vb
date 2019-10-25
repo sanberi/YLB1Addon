@@ -4,6 +4,7 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports TIModule
 
 Public NotInheritable Class TI_Z0008
     Inherits FormBase
@@ -252,12 +253,12 @@ Public NotInheritable Class TI_Z0008
         loNetDt.Columns.Add("CardName", GetType(String))  '供应商名称
 
         '查询出来当前退货单的所有批次，数量
-        Dim lsSQLorpd As String = "select T10.DocEntry ,T11.LineNum ,T10.DocDate,T11.PriceAfVAT as 'Price' ,T21.BatchNum ,T21.Quantity  ," + _
-                            " T21.ItemCode ,T12.ItemName ,T10.CardName ,T22.SuppSerial as 'Location'  " + _
-                           "  from ORPD T10 inner join RPD1 t11 ON T10.DocEntry =t11.DocEntry " + _
-                           "  inner join OITM t12 ON t11.ItemCode=T12.ItemCode " + _
-                            "  inner join IBT1 T21 ON t12.ItemCode =T21.ItemCode and t11.LineNum  =T21.BaseLinNum  and  T11.DocEntry =T21.BaseEntry and  t11.WhsCode =T21.WhsCode  and T21.BaseType='21' " + _
-                            " inner join OIBT T22 on T21.ItemCode =t22.ItemCode and T21.BatchNum =t22.BatchNum and T21.WhsCode =T22.WhsCode " + _
+        Dim lsSQLorpd As String = "select T10.DocEntry ,T11.LineNum ,T10.DocDate,T11.PriceAfVAT as 'Price' ,T21.BatchNum ,T21.Quantity  ," +
+                            " T21.ItemCode ,T12.ItemName ,T10.CardName ,T22.SuppSerial as 'Location'  " +
+                           "  from ORPD T10 inner join RPD1 t11 ON T10.DocEntry =t11.DocEntry " +
+                           "  inner join OITM t12 ON t11.ItemCode=T12.ItemCode " +
+                            "  inner join IBT1 T21 ON t12.ItemCode =T21.ItemCode and t11.LineNum  =T21.BaseLinNum  and  T11.DocEntry =T21.BaseEntry and  t11.WhsCode =T21.WhsCode  and T21.BaseType='21' " +
+                            " inner join OIBT T22 on T21.ItemCode =t22.ItemCode and T21.BatchNum =t22.BatchNum and T21.WhsCode =T22.WhsCode " +
                                 " where T10.DocEntry ='" + lsBaseEntry + "'"
         ioTempSql.ExecuteQuery(lsSQLorpd)
 
@@ -287,7 +288,7 @@ Public NotInheritable Class TI_Z0008
                 loNetDt.Rows.Add(loNetRow)
             Next
         End If
-        
+
         '创建库存发货单
         MyApplication.StatusBar.SetText("正在创建库存收货单，请稍后...", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning)
         Dim MyCompany = MyApplication.Company.GetDICompany()  '获取当前公司

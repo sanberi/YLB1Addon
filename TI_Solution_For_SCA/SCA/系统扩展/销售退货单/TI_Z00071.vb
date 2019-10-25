@@ -4,6 +4,7 @@ Imports SAPbouiCOM
 Imports System.Runtime.InteropServices
 Imports System.IO
 Imports SAPbobsCOM
+Imports TIModule
 
 Public NotInheritable Class TI_Z00071
     Inherits FormBase

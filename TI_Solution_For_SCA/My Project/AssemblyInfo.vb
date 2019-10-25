@@ -8,8 +8,8 @@ Imports System.Runtime.InteropServices
 
 ' 查看程序集属性的值
 
-<Assembly: AssemblyTitle("TEST")> 
-<Assembly: AssemblyDescription("上海斯凯普斯信息技术有限公司")> 
+<Assembly: AssemblyTitle("YLB1Addon")>
+<Assembly: AssemblyDescription("Update By Sanber")>
 <Assembly: AssemblyCompany("上海斯凯普斯信息技术有限公司")> 
 <Assembly: AssemblyProduct("TAX")> 
 <Assembly: AssemblyCopyright("Copyright © 上海斯凯普斯信息技术有限公司 2009")> 

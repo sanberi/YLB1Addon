@@ -3,6 +3,7 @@ Option Explicit On
 Imports SAPbouiCOM
 Imports System.Runtime.InteropServices
 Imports System.IO
+Imports TIModule
 
 Public NotInheritable Class TI_Z0151
     Inherits FormBase

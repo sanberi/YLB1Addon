@@ -7,7 +7,8 @@ Imports System.Runtime.InteropServices
 Imports System.IO
 Imports System.IO.Directory
 Imports Microsoft.Office.Interop.Excel
-
+Imports TIModule
+Imports TiExtend
 ''' <summary>
 ''' 事件分发器
 ''' </summary>
@@ -315,15 +316,15 @@ Friend Class ItemDispacher
                     End If
                 End If
             End If
-            If pVal.EventType = SAPbouiCOM.BoEventTypes.et_CLICK And pVal.BeforeAction = True And pVal.FormType = 998 And pVal.ItemUID = "11" And (pVal.Row = 87 Or pVal.Row = 35) Then
-                Dim myVal As String
-                myVal = TI_SBO_Application.Company.UserName
-                If TI_SBO_Application.Company.UserName <> "manager" Then
-                    TI_SBO_Application.SetStatusBarMessage("You cann't Change this")
-                    BubbleEvent = False
-                    Return
-                End If
-            End If
+            'If pVal.EventType = SAPbouiCOM.BoEventTypes.et_CLICK And pVal.BeforeAction = True And pVal.FormType = 998 And pVal.ItemUID = "11" And (pVal.Row = 87 Or pVal.Row = 35) Then
+            '    Dim myVal As String
+            '    myVal = TI_SBO_Application.Company.UserName
+            '    If TI_SBO_Application.Company.UserName <> "manager" Then
+            '        TI_SBO_Application.SetStatusBarMessage("You cann't Change this")
+            '        BubbleEvent = False
+            '        Return
+            '    End If
+            'End If
             Dim loobj As FormBase = Nothing
             '之前就判断是否存在有子窗体
             If ioFormSon.ContainsKey(FormUID) Then
@@ -390,6 +391,8 @@ Friend Class ItemDispacher
                             loobj = New TI_Z0100
                         Case "TI_Z0101"  '
                             loobj = New TI_Z0101
+                        Case "998"  '行字段选择面板
+                            loobj = New SYS998Form
                         Case Else
                             loobj = Nothing
                     End Select
@@ -401,7 +404,7 @@ Friend Class ItemDispacher
                 End If
             Else
                 Select Case pVal.FormTypeEx
-                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "149"， "TI_Z0151"， "TI_Z0150", "TI_Z00071", "143", "TI_Z0100", "TI_Z0101"
+                    Case "140", "TI_Z0010", "142", "141", "134", "180", "940", "720", "182", "721", "139", "TI_Z000B", "TI_Z000C", "42", "TI_Z0012", "TI_Z0081", "149"， "TI_Z0151"， "TI_Z0150", "TI_Z00071", "143", "TI_Z0100", "TI_Z0101", "998"
                         loobj = CType(ioFormSL.Item(pVal.FormUID), FormBase)
                     Case Else
                         loobj = Nothing

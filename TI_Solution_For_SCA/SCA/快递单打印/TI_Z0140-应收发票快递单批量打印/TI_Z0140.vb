@@ -3,6 +3,7 @@ Option Explicit On
 Imports SAPbouiCOM
 Imports System.Runtime.InteropServices
 Imports System.IO
+Imports TIModule
 
 Public NotInheritable Class TI_Z0140
     Inherits FormBase
@@ -16,9 +17,9 @@ Public NotInheritable Class TI_Z0140
     Private iiDocEntry As Integer
     Dim isBsEntry As Object
 
-    <DllImport("user32.dll", SetLastError:=True)> _
-    Private Shared Function GetWindowThreadProcessId( _
-    ByVal handle As Integer, _
+    <DllImport("user32.dll", SetLastError:=True)>
+    Private Shared Function GetWindowThreadProcessId(
+    ByVal handle As Integer,
     <Out()> ByRef processId As Integer) As Integer
     End Function
 
@@ -348,11 +349,11 @@ Public NotInheritable Class TI_Z0140
             lsShowC = "N"
         End If
 
-        lsSql = "if object_id('tempdb..#TempWhere') is not null" + vbNewLine + _
-                "Begin drop table #TempWhere End" + vbNewLine + _
-                "Select " + lsCardCF + " CardNF," + lsCardCT + " CardNT," + lsDateF + " DateF," + lsDateT + "" + vbNewLine + _
-                " DateT," + Convert.ToString(liPoT) + " PoF, " + Convert.ToString(liPoT) + " PoT," + vbNewLine + _
-                lsSQF + " SQF, " + lsSQT + " SQT,'" + lsKfName + "' KfName,'" + lsShowC + "' ShowC,'" + lsPPKD + "' PPKD,'" + lsKDGS + "' KDName into #TempWhere" + vbNewLine + _
+        lsSql = "if object_id('tempdb..#TempWhere') is not null" + vbNewLine +
+                "Begin drop table #TempWhere End" + vbNewLine +
+                "Select " + lsCardCF + " CardNF," + lsCardCT + " CardNT," + lsDateF + " DateF," + lsDateT + "" + vbNewLine +
+                " DateT," + Convert.ToString(liPoT) + " PoF, " + Convert.ToString(liPoT) + " PoT," + vbNewLine +
+                lsSQF + " SQF, " + lsSQT + " SQT,'" + lsKfName + "' KfName,'" + lsShowC + "' ShowC,'" + lsPPKD + "' PPKD,'" + lsKDGS + "' KDName into #TempWhere" + vbNewLine +
                 "Exec TI_GetKDDY"
         ioDtTempSql.ExecuteQuery(lsSql)
         ioDtDoc.Rows.Clear()
@@ -488,7 +489,7 @@ Public NotInheritable Class TI_Z0140
                     liLineId = liLineId + 1
                 End If
             Next i
-           
+
             ioMtx_20.LoadFromDataSource()
         Catch ex As Exception
             MyApplication.SetStatusBarMessage(ex.ToString())
@@ -543,8 +544,8 @@ Public NotInheritable Class TI_Z0140
                     'ioMtx_10.FlushToDataSource()
                     Dim lsSQL As String
                     MyApplication.StatusBar.SetText("正在生成快递单号，请稍后....", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning)
-                    lsSQL = "Declare @error  int,@error_message nvarchar (200) " + vbNewLine + _
-                            "Exec [TI_CreateKDDoc] " + Convert.ToString(liDocEntry) + ",@error output,@error_message output" + vbNewLine + _
+                    lsSQL = "Declare @error  int,@error_message nvarchar (200) " + vbNewLine +
+                            "Exec [TI_CreateKDDoc] " + Convert.ToString(liDocEntry) + ",@error output,@error_message output" + vbNewLine +
                             "Select @error,@error_message"
                     ioDtTempSql.ExecuteQuery(lsSQL)
                     Dim liError As Integer
@@ -666,7 +667,7 @@ Public NotInheritable Class TI_Z0140
 
         Dim lsCurrPcName, lsU_Fpath, lsU_Esub, lsU_Esubp, lsU_DPrinter, lsU_Printer, lsU_PsizeID As String
         lsCurrPcName = System.Environment.MachineName
-        lsSelectSql = "Select t10.U_Fpath,t10.U_Esub,t10.U_Esubp,t10.U_Printer U_DPrinter,t11.U_Printer,t11.U_PsizeID From [@TI_Z0150] t10" + vbNewLine + _
+        lsSelectSql = "Select t10.U_Fpath,t10.U_Esub,t10.U_Esubp,t10.U_Printer U_DPrinter,t11.U_Printer,t11.U_PsizeID From [@TI_Z0150] t10" + vbNewLine +
                       "left join [@TI_Z0151] t11 on t10.Code=t11.Code and t11.U_PcName='" + lsCurrPcName + "' where t10.Code ='" + lsKDGS + "'"
         ioDtTempSql.ExecuteQuery(lsSelectSql)
         If Not ioDtTempSql.IsEmpty Then
@@ -733,8 +734,8 @@ Public NotInheritable Class TI_Z0140
         lsToFile = lsExcelMarchPath + "\" + lsU_Fpath
 
         '由一个存储过程检查
-        lsSelectSql = "Declare @error  int,@error_message nvarchar (200) " + vbNewLine + _
-                             "Exec [TI_CheckPrintKDDOc] " + Convert.ToString(iiDocEntry) + ",@error output,@error_message output" + vbNewLine + _
+        lsSelectSql = "Declare @error  int,@error_message nvarchar (200) " + vbNewLine +
+                             "Exec [TI_CheckPrintKDDOc] " + Convert.ToString(iiDocEntry) + ",@error output,@error_message output" + vbNewLine +
                              "Select @error,@error_message"
         ioDtTempSql.ExecuteQuery(lsSelectSql)
         Dim liError As Integer
@@ -795,7 +796,7 @@ Public NotInheritable Class TI_Z0140
                             oExcelApp.ScreenUpdating = True
                             m_objSheet.PrintOutEx()
                         End If
-                       
+
                         MyApplication.StatusBar.SetText("正在打印快递单！", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success)
                     Next i
                     Dim lsSql As String

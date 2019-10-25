@@ -4,6 +4,7 @@ Imports SAPbouiCOM
 Imports System.IO
 Imports Microsoft.Office.Interop.Excel
 Imports System.Runtime.InteropServices
+Imports TIModule
 
 Public NotInheritable Class TI_Z0011
     Inherits FormBase
@@ -15,7 +16,7 @@ Public NotInheritable Class TI_Z0011
 
 
     Private Sub TI_Z0011_ItemEvent(FormUID As String, ByRef pVal As ItemEvent, ByRef BubbleEvent As Boolean) Handles Me.ItemEvent
-          Select pVal.EventType
+        Select Case pVal.EventType
             Case BoEventTypes.et_FORM_LOAD
                 If pVal.BeforeAction Then
                     Dim loItem As Item
